@@ -8,7 +8,6 @@ import { List } from 'src/models/list.model';
 import { ErrorSanitizer } from 'utils/error.utils';
 import {
   ICreateList,
-  IDeleteList,
   IGetAllList,
   IGetList,
   IUpdateListTitle,
