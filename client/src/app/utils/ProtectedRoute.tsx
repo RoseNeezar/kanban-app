@@ -1,15 +1,18 @@
+import { observer } from "mobx-react-lite";
 import React, { FC } from "react";
 import { Redirect, Route, RouteProps } from "react-router";
-import isAuth from "./isAuth";
+import { useStore } from "../stores/store";
 
 const ProtectedRoute: FC<RouteProps> = ({ children, ...rest }) => {
-  const auth = isAuth();
+  const {
+    userStore: { isLoggedIn },
+  } = useStore();
 
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        auth.currentUser ? (
+        isLoggedIn ? (
           children
         ) : (
           <Redirect
@@ -24,4 +27,4 @@ const ProtectedRoute: FC<RouteProps> = ({ children, ...rest }) => {
   );
 };
 
-export default ProtectedRoute;
+export default observer(ProtectedRoute);

@@ -1,15 +1,18 @@
 import React, { FC } from "react";
 import { RouteProps } from "react-router";
 import { Redirect, Route } from "react-router-dom";
-import isAuth from "./isAuth";
+import { useStore } from "../stores/store";
 
 const ProtectAuthRoute: FC<RouteProps> = ({ children, ...rest }) => {
-  const auth = isAuth();
+  const {
+    userStore: { isLoggedIn },
+  } = useStore();
+
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        auth.currentUser ? (
+        isLoggedIn ? (
           <Redirect
             to={{
               pathname: "/",

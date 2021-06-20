@@ -1,25 +1,31 @@
-import React from "react";
-import { Router, Route, Switch } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Navbar from "../app/components/Navbar/Navbar";
 import Login from "../app/PageComponent/login/Login";
 import MainPage from "../app/PageComponent/Main";
 import NotFound from "../app/PageComponent/NotFound/NotFound";
 import Register from "../app/PageComponent/register/Register";
+import { useStore } from "../app/stores/store";
 import ProtectAuthRoute from "../app/utils/ProtectAuthRoute";
 import ProtectedRoute from "../app/utils/ProtectedRoute";
-import { createBrowserHistory } from "history";
-
-export const history = createBrowserHistory();
 
 const App = () => {
+  const { userStore } = useStore();
+  const { isLoggedIn } = userStore;
+  useEffect(() => {
+    userStore.getUser().finally(() => console.log("user"));
+  }, [userStore, isLoggedIn]);
   return (
-    <Router history={history}>
+    <Router basename="/">
       <Switch>
         <ProtectedRoute exact path="/">
+          <Navbar />
           <MainPage />
         </ProtectedRoute>
-        <Route exact path="/login">
+        <ProtectAuthRoute exact path="/login">
           <Login />
-        </Route>
+        </ProtectAuthRoute>
         <ProtectAuthRoute exact path="/register">
           <Register />
         </ProtectAuthRoute>
@@ -31,4 +37,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default observer(App);
