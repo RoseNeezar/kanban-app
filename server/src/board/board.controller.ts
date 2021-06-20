@@ -9,7 +9,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ReturnModelType } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/models/user.model';

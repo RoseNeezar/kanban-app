@@ -44,21 +44,17 @@ export class CardsService {
   async getAllCards(cardDto: IGetAllCards) {
     const { listIds } = cardDto;
     try {
-      // let totalCards = [];
-      if (listIds && listIds.length > 0) {
+      if (listIds && listIds[0].length > 0) {
         const cardsPromise = listIds.map(
           async (id) =>
             await this.cardsModel.find({ list: id }).select('_id title list'),
         );
         let totalCards = await Promise.all(cardsPromise);
+
         return { cards: totalCards };
-        // for(const listId of listIds){
-        //   const cards = await this.cardsModel.find({list:listId}).select("_id title list")
-        //   if(cards.length > 0){
-        //     totalCards.push(cards)
-        //   }
-        // }
       }
+
+      return { cards: [] };
     } catch (error) {
       throw new BadRequestException(ErrorSanitizer(error));
     }

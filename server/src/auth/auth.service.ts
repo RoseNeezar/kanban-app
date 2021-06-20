@@ -1,18 +1,13 @@
-import {
-  BadRequestException,
-  ConflictException,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { ReturnModelType } from '@typegoose/typegoose';
+import * as bcrypt from 'bcryptjs';
+import * as cookie from 'cookie';
+import { Response } from 'express';
 import { InjectModel } from 'nestjs-typegoose';
 import { User } from 'src/models/user.model';
 import { ErrorSanitizer } from 'utils/error.utils';
-import * as bcrypt from 'bcryptjs';
-import * as cookie from 'cookie';
 import { AuthCredentialDto, TokenPayload } from './auth.dto';
-import { Response } from 'express';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -70,9 +65,9 @@ export class AuthService {
 
   public getCookieForLogOut() {
     return cookie.serialize('tokenKanban', '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      // httpOnly: true,
+      secure: true,
+      sameSite: 'none',
       expires: new Date(0),
       path: '/',
     });
@@ -82,9 +77,9 @@ export class AuthService {
     const payload: TokenPayload = { userId };
     const token = this.jwtService.sign(payload);
     return cookie.serialize('tokenKanban', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      // httpOnly: true,
+      secure: true,
+      sameSite: 'none',
       maxAge: +process.env.JWT_EXPIRATION_TIME,
       path: '/',
     });

@@ -9,7 +9,7 @@ import { Cards } from './cards.model';
   },
 })
 export class List {
-  @prop({ required: [true, 'Please tell use your name!'] })
+  @prop({ required: [true, 'missing title!'] })
   title: string;
 
   @prop({

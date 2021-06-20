@@ -40,7 +40,7 @@ export class BoardService {
         };
         return { boards: [emptyBoard] };
       }
-      return boards;
+      return { boards };
     } catch (error) {
       throw new BadRequestException(ErrorSanitizer(error));
     }
@@ -53,7 +53,7 @@ export class BoardService {
         title,
         listOrder: [],
       });
-      return result;
+      return { result };
     } catch (error) {
       throw new BadRequestException(ErrorSanitizer(error));
     }
@@ -68,7 +68,7 @@ export class BoardService {
           { new: true },
         );
 
-        return result.listOrder;
+        return { updatedListOrder: result.listOrder };
       }
     } catch (error) {
       throw new BadRequestException(ErrorSanitizer(error));

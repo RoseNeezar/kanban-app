@@ -10,7 +10,7 @@ interface ICards {
   addedListId: Types.ObjectId;
   removedListCardIds: string[];
   addedListCardIds: string[];
-  listIds: Types.ObjectId[];
+  listIds: string[];
 }
 
 export type ICreateCard = Pick<ICards, 'listId' | 'title'>;
