@@ -8,6 +8,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ReturnModelType } from '@typegoose/typegoose';
 import { Response } from 'express';
 import { User } from 'src/models/user.model';
 import { AuthCredentialDto } from './auth.dto';
@@ -40,7 +41,7 @@ export class AuthController {
 
   @Get('/me')
   @UseGuards(AuthGuard())
-  me(@GetUser() user: User) {
+  me(@GetUser() user: ReturnModelType<typeof User>) {
     return user;
   }
 }
