@@ -1,9 +1,16 @@
+import { observer } from "mobx-react-lite";
 import Head from "next/head";
-import React, { ChangeEvent, FC, FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import InputGroup from "../../components/InputGroup";
+import { useStore } from "../../stores/store";
 
 const Login: FC = () => {
+  const history = useHistory();
+  const {
+    userStore: { login },
+  } = useStore();
+
   const [formState, setFormState] = useState({
     username: "",
     password: "",
@@ -19,6 +26,7 @@ const Login: FC = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (username && password) {
+      login({ username, password }, history).catch((err) => console.log(err));
     }
   };
 
@@ -64,4 +72,4 @@ const Login: FC = () => {
   );
 };
 
-export default Login;
+export default observer(Login);

@@ -1,10 +1,15 @@
 import React, { ChangeEvent, FC, FormEvent, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import InputGroup from "../../components/InputGroup";
 import Head from "next/head";
+import { useStore } from "../../stores/store";
+import { observer } from "mobx-react-lite";
 
 const Register: FC = () => {
+  const history = useHistory();
+  const {
+    userStore: { register },
+  } = useStore();
   const [formState, setFormState] = useState({
     email: "",
     username: "",
@@ -21,6 +26,9 @@ const Register: FC = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (email && username && password) {
+      register({ email, username, password }, history).catch((err) =>
+        console.log(err)
+      );
     }
   };
 
@@ -72,4 +80,4 @@ const Register: FC = () => {
   );
 };
 
-export default Register;
+export default observer(Register);
