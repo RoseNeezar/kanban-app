@@ -1,5 +1,4 @@
 import { modelOptions, prop, Ref } from '@typegoose/typegoose';
-import * as validator from 'validator';
 import { Board } from './board.model';
 import { Cards } from './cards.model';
 
