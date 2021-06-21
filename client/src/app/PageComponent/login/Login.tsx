@@ -35,7 +35,7 @@ const Login: FC = () => {
       <Head>
         <title>Login</title>
       </Head>
-      <div className="flex flex-col items-center justify-center h-screen bg-dark-main">
+      <div className="flex flex-col items-center justify-center h-screen mt-12 bg-dark-main">
         <h1 className="mb-10 text-6xl text-white">Login</h1>
         <div className="flex flex-col items-center justify-center h-auto p-10 shadow-lg w-96 mb-44 bg-dark-second rounded-2xl">
           <form onSubmit={handleSubmit} className="flex flex-col w-full ">
