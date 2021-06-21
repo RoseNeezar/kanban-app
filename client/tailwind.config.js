@@ -3,6 +3,12 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      gridTemplateColumns: {
+        fit: "repeat(auto-fit, 18rem)",
+      },
+      gridTemplateRows: {
+        min: "min-content",
+      },
       height: {
         big: "90%",
         full: "100%",

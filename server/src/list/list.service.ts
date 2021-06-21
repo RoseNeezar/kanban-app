@@ -67,7 +67,7 @@ export class ListService {
         { title },
         { new: true },
       );
-      console.log('---', listId);
+
       return { data: listData };
     } catch (error) {
       throw new BadRequestException(ErrorSanitizer(error));
