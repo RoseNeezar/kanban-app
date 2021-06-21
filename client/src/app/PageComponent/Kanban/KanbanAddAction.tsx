@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import { FC } from "react";
-import { useStore } from "../../stores/store";
-import TextAreaAuto from "react-textarea-autosize";
 import { observer } from "mobx-react-lite";
+import React, { FC, useState } from "react";
+import { useStore } from "../../stores/store";
 
 interface IKanbanAddAction {
   list: boolean | number;
