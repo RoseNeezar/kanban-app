@@ -11,15 +11,12 @@ import { ListModule } from './list/list.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypegooseModule.forRoot(
-      `mongodb://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@mongo:27017`,
-      {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-        useUnifiedTopology: true,
-      },
-    ),
+    TypegooseModule.forRoot(`mongodb://root:example@mongo:27017`, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true,
+    }),
     AuthModule,
     BoardModule,
     CardsModule,
