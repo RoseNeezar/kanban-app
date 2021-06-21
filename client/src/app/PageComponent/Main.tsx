@@ -1,23 +1,90 @@
+import { toJS } from "mobx";
+import { observer } from "mobx-react-lite";
 import Head from "next/head";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useStore } from "../stores/store";
 
 const MainPage = () => {
+  const history = useHistory();
+  const {
+    kanbanStore: {
+      GetAllBoards,
+      allBoards,
+      setCurrentBoardId,
+      CreateBoard,
+      DeleteBoard,
+      setListInCurrentBoard,
+    },
+    userStore: { user: currentUser },
+  } = useStore();
+  const [boardTitle, setBoardTitle] = useState("");
+  useEffect(() => {
+    GetAllBoards();
+  }, []);
+
+  const HandleBoard = (boardId: string) => {
+    setListInCurrentBoard(null);
+    setCurrentBoardId(boardId);
+    history.push("/kanban");
+  };
+  const HandleAddBoard = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === 13) {
+      CreateBoard(boardTitle);
+
+      setBoardTitle("");
+    }
+  };
+  const HandleDeleteBoard = (boardId: string) => {
+    DeleteBoard(boardId);
+  };
   return (
     <>
       <Head>
         <title>Kanban App</title>
       </Head>
       <div className="flex flex-row justify-center h-screen pt-10 bg-dark-main">
-        <div className="flex-col hidden w-1/5 h-full max-w-xs pt-16 lg:flex">
-          <h1>hello</h1>
-        </div>
+        {!allBoards ? (
+          <h1>Loading...</h1>
+        ) : (
+          <div className="flex flex-col items-center justify-center w-full ">
+            <p className="text-lg text-dark-txt">
+              Fill the input with a board name, then press 'Enter'
+            </p>
+            <input
+              className="p-2 mt-8 mb-8 rounded-md w-96"
+              value={boardTitle}
+              onChange={(e) => setBoardTitle(e.target.value)}
+              onKeyDown={(e) => HandleAddBoard(e)}
+            />
+            <div>
+              {allBoards.boards
+                .filter((fil) => fil.title !== "")
+                .map((res) => (
+                  <div className="p-2 rounded-md bg-dark-third" key={res._id}>
+                    <div className="flex justify-end ">
+                      <button
+                        className="text-3xl rounded-full text-dark-main hover:text-gray-200"
+                        onClick={() => HandleDeleteBoard(res._id)}
+                      >
+                        <i className=" bx bxs-x-circle"></i>
+                      </button>
+                    </div>
 
-        <div className="w-full h-full max-w-5xl px-2 pt-32 lg:w-4/5 lg:pt-16">
-          <h1>wordk</h1>
-        </div>
+                    <button
+                      className="p-20 rounded-md hover:text-black hover:bg-gray-200 bg-dark-second text-dark-txt"
+                      onClick={() => HandleBoard(res._id)}
+                    >
+                      {res.title}
+                    </button>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
 };
 
-export default MainPage;
+export default observer(MainPage);
