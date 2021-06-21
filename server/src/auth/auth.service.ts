@@ -6,7 +6,7 @@ import * as cookie from 'cookie';
 import { Response } from 'express';
 import { InjectModel } from 'nestjs-typegoose';
 import { User } from 'src/models/user.model';
-import { ErrorSanitizer } from 'utils/error.utils';
+import { ErrorSanitizer } from 'src/utils/error.utils';
 import { AuthCredentialDto, TokenPayload } from './auth.dto';
 
 @Injectable()

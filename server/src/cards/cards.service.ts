@@ -5,7 +5,7 @@ import { InjectModel } from 'nestjs-typegoose';
 import { Board } from 'src/models/board.model';
 import { Cards } from 'src/models/cards.model';
 import { List } from 'src/models/list.model';
-import { ErrorSanitizer } from 'utils/error.utils';
+import { ErrorSanitizer } from 'src/utils/error.utils';
 import {
   ICreateCard,
   IGetAllCards,

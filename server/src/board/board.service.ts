@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { InjectModel } from 'nestjs-typegoose';
 import { Board } from 'src/models/board.model';
-import { ErrorSanitizer } from 'utils/error.utils';
-import { mongoId } from 'utils/mongo.types';
+import { ErrorSanitizer } from 'src/utils/error.utils';
+import { mongoId } from 'src/utils/mongo.types';
 import {
   ICreateBoard,
   IDeleteBoard,
