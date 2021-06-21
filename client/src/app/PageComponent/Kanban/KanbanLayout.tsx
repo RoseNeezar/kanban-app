@@ -81,7 +81,7 @@ const KanbanLayout = () => {
       <Head>
         <title>Kanban App</title>
       </Head>
-      <div className="flex flex-row justify-center h-screen pt-12 bg-dark-main">
+      <div className="flex flex-row justify-center h-screen pt-12 overflow-scroll bg-dark-main ">
         <ListModal
           style={ModalLayout}
           isOpen={openEditTodoModal}
@@ -105,7 +105,7 @@ const KanbanLayout = () => {
                   <Observer>
                     {() => (
                       <div
-                        className="grid justify-start w-full h-full grid-flow-col gap-2 p-10 overflow-hidden auto-rows-auto grid-rows-min min-w-max grid-cols-fit"
+                        className="grid justify-start w-full h-full grid-flow-col gap-2 p-10 overflow-auto grid-rows-min "
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                       >

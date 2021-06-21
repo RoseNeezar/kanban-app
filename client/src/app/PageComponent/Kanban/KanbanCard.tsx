@@ -27,17 +27,17 @@ const KanbanCard: FC<IKanbanCard> = ({ text, id, index, listID }) => {
             <Observer>
               {() => (
                 <div
-                  className="w-64 mb-2 "
+                  className="w-full mb-2 "
                   ref={provided.innerRef}
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
                 >
-                  <div className="flex flex-row justify-between p-2 overflow-hidden rounded-md max-h-11 bg-dark-main">
-                    <p className="w-5/6 overflow-hidden text-md text-dark-txt">
+                  <div className="flex flex-row justify-between p-2 overflow-hidden rounded-md max-h-9 bg-dark-main">
+                    <p className="w-5/6 overflow-hidden text-sm overflow-ellipsis whitespace-nowrap text-dark-txt">
                       {text}
                     </p>
                     <button
-                      className="p-0.5 text-2xl rounded-full flex items-center text-dark-txt hover:bg-gray-300"
+                      className="flex items-center text-xl rounded-full text-dark-txt hover:bg-gray-300"
                       onClick={() => HandleEditCard()}
                     >
                       <i className="bx bx-dots-vertical-rounded"></i>

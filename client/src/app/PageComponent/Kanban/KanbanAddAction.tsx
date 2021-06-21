@@ -31,8 +31,8 @@ const KanbanAddAction: FC<IKanbanAddAction> = ({ list, id }) => {
   return (
     <>
       {openForm ? (
-        <div className="p-3 rounded-md bg-dark-third">
-          <TextAreaAuto
+        <div className="max-h-full p-3 rounded-md h-28 bg-dark-third">
+          <input
             placeholder={list ? "Enter title for list" : "Enter title for card"}
             autoFocus
             value={textInput}
@@ -40,7 +40,7 @@ const KanbanAddAction: FC<IKanbanAddAction> = ({ list, id }) => {
             className="p-2 mb-3 border-none rounded-md outline-none resize-none w-60"
           />
 
-          <div className="flex justify-between">
+          <div className="flex justify-between ">
             <button
               className="p-1 text-white bg-green-900 rounded-md"
               onClick={() => HandleAdd()}
@@ -56,7 +56,7 @@ const KanbanAddAction: FC<IKanbanAddAction> = ({ list, id }) => {
           </div>
         </div>
       ) : (
-        <div className="flex items-center justify-center h-10 rounded-md w-60">
+        <div className="flex items-center justify-center w-64 h-10 min-w-full rounded-md">
           <button
             className="flex items-center justify-between w-full h-full pl-2 pr-2 rounded-md hover:bg-gray-200 hover:text-black bg-dark-second text-dark-txt text-md"
             onClick={() => setOpenForm(true)}

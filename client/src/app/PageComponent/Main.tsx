@@ -47,7 +47,7 @@ const MainPage = () => {
         {!allBoards ? (
           <h1>Loading...</h1>
         ) : (
-          <div className="flex flex-col items-center justify-center w-full ">
+          <div className="flex flex-col items-center justify-center w-full mt-10">
             <p className="text-lg text-dark-txt">
               Fill the input with a board name, then press 'Enter'
             </p>
@@ -57,7 +57,7 @@ const MainPage = () => {
               onChange={(e) => setBoardTitle(e.target.value)}
               onKeyDown={(e) => HandleAddBoard(e)}
             />
-            <div>
+            <div className="grid justify-center w-full grid-flow-row gap-10 auto-rows-min grid-rows-min grid-cols-fit">
               {allBoards.boards
                 .filter((fil) => fil.title !== "")
                 .map((res) => (
@@ -72,7 +72,7 @@ const MainPage = () => {
                     </div>
 
                     <button
-                      className="p-20 rounded-md hover:text-black hover:bg-gray-200 bg-dark-second text-dark-txt"
+                      className="w-full rounded-md h-60 hover:text-black hover:bg-gray-200 bg-dark-second text-dark-txt"
                       onClick={() => HandleBoard(res._id)}
                     >
                       {res.title}

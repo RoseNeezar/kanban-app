@@ -63,7 +63,7 @@ const KanbanList: FC<IKanbanList> = ({ title, cards, id, index }) => {
         <Observer>
           {() => (
             <div
-              className="w-full h-auto min-h-full "
+              className="h-auto min-h-full w-72 "
               {...provided.draggableProps}
               ref={provided.innerRef}
               {...provided.dragHandleProps}
@@ -81,7 +81,7 @@ const KanbanList: FC<IKanbanList> = ({ title, cards, id, index }) => {
                           <>
                             <div className="relative flex flex-row justify-between ">
                               {!editList ? (
-                                <p className="mb-1 text-lg text-dark-txt">
+                                <p className="w-5/6 mb-1 overflow-hidden text-lg overflow-ellipsis text-dark-txt whitespace-nowrap">
                                   {title}
                                 </p>
                               ) : (
@@ -98,9 +98,7 @@ const KanbanList: FC<IKanbanList> = ({ title, cards, id, index }) => {
                                   />
                                 </div>
                               )}
-                              <div
-                                className={`absolute top-0 right-0 z-50 w-7  text-right `}
-                              >
+                              <div className="absolute top-0 z-50 text-right right-2 w-7 ">
                                 <Menu
                                   as="div"
                                   className="relative inline-block text-left"
