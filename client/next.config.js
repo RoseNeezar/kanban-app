@@ -7,7 +7,6 @@ module.exports = {
 
     return config;
   },
-  basePath: "/app/kanban",
   async rewrites() {
     return [
       {

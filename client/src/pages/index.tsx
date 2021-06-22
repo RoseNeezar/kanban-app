@@ -18,7 +18,7 @@ const App = () => {
     userStore.getUser().finally(() => console.log(""));
   }, [userStore, isLoggedIn]);
   return (
-    <Router basename="/app/kanban">
+    <Router basename="/">
       <Switch>
         <ProtectedRoute exact path="/">
           <Navbar />
