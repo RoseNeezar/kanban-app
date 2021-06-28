@@ -9,6 +9,7 @@ import { ErrorSanitizer } from 'src/utils/error.utils';
 import {
   ICreateCard,
   IGetAllCards,
+  IUpdateCardDesc,
   IUpdateCardDifferentList,
   IUpdateCardSameList,
   IUpdateCardTitle,
@@ -28,7 +29,11 @@ export class CardsService {
   async createCard(cardDto: ICreateCard) {
     const { listId, title } = cardDto;
     try {
-      const card = await this.cardsModel.create({ list: listId, title });
+      const card = await this.cardsModel.create({
+        list: listId,
+        title,
+        descriptions: '',
+      });
 
       const list = await this.listModel.findById(listId);
 
@@ -66,6 +71,20 @@ export class CardsService {
       const card = await this.cardsModel.findByIdAndUpdate(
         cardId,
         { title },
+        { new: true },
+      );
+      return { data: card };
+    } catch (error) {
+      throw new BadRequestException(ErrorSanitizer(error));
+    }
+  }
+
+  async updateCardDesc(cardDto: IUpdateCardDesc, cardId: Types.ObjectId) {
+    const { descriptions } = cardDto;
+    try {
+      const card = await this.cardsModel.findByIdAndUpdate(
+        cardId,
+        { descriptions },
         { new: true },
       );
       return { data: card };

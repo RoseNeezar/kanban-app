@@ -11,6 +11,7 @@ import { Types } from 'mongoose';
 import {
   ICreateCard,
   IGetAllCards,
+  IUpdateCardDesc,
   IUpdateCardDifferentList,
   IUpdateCardSameList,
   IUpdateCardTitle,
@@ -38,6 +39,14 @@ export class CardsController {
     @Body() cardDto: IUpdateCardTitle,
   ) {
     return this.cardService.updateCardTitle(cardDto, cardId);
+  }
+
+  @Post('/card/desc/:cardId')
+  updateCardDescription(
+    @Param('cardId') cardId: Types.ObjectId,
+    @Body() cardDto: IUpdateCardDesc,
+  ) {
+    return this.cardService.updateCardDesc(cardDto, cardId);
   }
 
   @Post('/reorder/samelist')

@@ -12,6 +12,9 @@ export class Cards {
   @prop({ required: [true, 'missing title!'] })
   title: string;
 
+  @prop()
+  descriptions: string;
+
   @prop({
     ref: 'List',
   })

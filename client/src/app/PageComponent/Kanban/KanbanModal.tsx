@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useStore } from "../../stores/store";
 import TextAreaAuto from "react-textarea-autosize";
 import { observer } from "mobx-react-lite";
+import markdown from "react-markdown";
 
 const KanbanModal = () => {
   const {
