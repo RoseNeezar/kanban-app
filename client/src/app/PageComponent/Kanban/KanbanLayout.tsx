@@ -76,6 +76,10 @@ const KanbanLayout = () => {
     GetList(currentBoardId);
   }, []);
 
+  const HandleClosingModal = () => {
+    setOpenEditTodoModal(false);
+  };
+
   return (
     <>
       <Head>
@@ -86,7 +90,7 @@ const KanbanLayout = () => {
           <Dialog
             as="div"
             className="fixed inset-0 z-50 overflow-y-auto"
-            onClose={() => setOpenEditTodoModal(false)}
+            onClose={() => HandleClosingModal()}
           >
             <div className="min-h-screen px-4 text-center">
               <Dialog.Overlay className="fixed inset-0 bg-gray-600 opacity-25" />

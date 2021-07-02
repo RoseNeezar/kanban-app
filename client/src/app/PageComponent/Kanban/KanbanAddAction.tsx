@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { FC, useState } from "react";
+import React, { FC, KeyboardEvent, useState } from "react";
 import { useStore } from "../../stores/store";
 
 interface IKanbanAddAction {
@@ -26,6 +26,11 @@ const KanbanAddAction: FC<IKanbanAddAction> = ({ list, id }) => {
       setOpenForm(false);
     }
   };
+  const handleAddCard = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && textInput.length > 0) {
+      HandleAdd();
+    }
+  };
   return (
     <>
       {openForm ? (
@@ -34,6 +39,7 @@ const KanbanAddAction: FC<IKanbanAddAction> = ({ list, id }) => {
             placeholder={list ? "Enter title for list" : "Enter title for card"}
             autoFocus
             value={textInput}
+            onKeyDown={(e) => handleAddCard(e)}
             onChange={(e) => setTextInput(e.target.value)}
             className="p-2 mb-3 border-none rounded-md outline-none resize-none w-60"
           />

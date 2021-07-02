@@ -222,7 +222,7 @@ export default class KanbanStore {
           );
         });
         this.setListInCurrentBoard(order);
-        console.log(result.list);
+
         this.GetAllCard();
       });
     } catch (error) {
