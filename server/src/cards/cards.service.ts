@@ -9,10 +9,9 @@ import { ErrorSanitizer } from 'src/utils/error.utils';
 import {
   ICreateCard,
   IGetAllCards,
-  IUpdateCardDesc,
   IUpdateCardDifferentList,
   IUpdateCardSameList,
-  IUpdateCardTitle,
+  IUpdateCard,
 } from './cards.dto';
 
 @Injectable()
@@ -52,7 +51,9 @@ export class CardsService {
       if (listIds && listIds[0].length > 0) {
         const cardsPromise = listIds.map(
           async (id) =>
-            await this.cardsModel.find({ list: id }).select('_id title list'),
+            await this.cardsModel
+              .find({ list: id })
+              .select('_id title descriptions list'),
         );
         let totalCards = await Promise.all(cardsPromise);
 
@@ -65,26 +66,12 @@ export class CardsService {
     }
   }
 
-  async updateCardTitle(cardDto: IUpdateCardTitle, cardId: Types.ObjectId) {
-    const { title } = cardDto;
+  async updateCard(cardDto: IUpdateCard, cardId: Types.ObjectId) {
+    const { title, descriptions } = cardDto;
     try {
       const card = await this.cardsModel.findByIdAndUpdate(
         cardId,
-        { title },
-        { new: true },
-      );
-      return { data: card };
-    } catch (error) {
-      throw new BadRequestException(ErrorSanitizer(error));
-    }
-  }
-
-  async updateCardDesc(cardDto: IUpdateCardDesc, cardId: Types.ObjectId) {
-    const { descriptions } = cardDto;
-    try {
-      const card = await this.cardsModel.findByIdAndUpdate(
-        cardId,
-        { descriptions },
+        { title, descriptions },
         { new: true },
       );
       return { data: card };

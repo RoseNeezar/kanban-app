@@ -16,8 +16,7 @@ interface ICards {
 
 export type ICreateCard = Pick<ICards, 'listId' | 'title'>;
 export type IGetAllCards = Pick<ICards, 'listIds'>;
-export type IUpdateCardTitle = Pick<ICards, 'title'>;
-export type IUpdateCardDesc = Pick<ICards, 'descriptions'>;
+export type IUpdateCard = Pick<ICards, 'title' | 'descriptions'>;
 export type IUpdateCardSameList = Pick<
   ICards,
   'sameListId' | 'sameListCardIds'

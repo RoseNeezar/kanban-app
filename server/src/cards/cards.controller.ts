@@ -11,10 +11,9 @@ import { Types } from 'mongoose';
 import {
   ICreateCard,
   IGetAllCards,
-  IUpdateCardDesc,
   IUpdateCardDifferentList,
   IUpdateCardSameList,
-  IUpdateCardTitle,
+  IUpdateCard,
 } from './cards.dto';
 import { CardsService } from './cards.service';
 
@@ -34,19 +33,11 @@ export class CardsController {
   }
 
   @Post('/card/:cardId')
-  updateCardTitle(
+  updateCard(
     @Param('cardId') cardId: Types.ObjectId,
-    @Body() cardDto: IUpdateCardTitle,
+    @Body() cardDto: IUpdateCard,
   ) {
-    return this.cardService.updateCardTitle(cardDto, cardId);
-  }
-
-  @Post('/card/desc/:cardId')
-  updateCardDescription(
-    @Param('cardId') cardId: Types.ObjectId,
-    @Body() cardDto: IUpdateCardDesc,
-  ) {
-    return this.cardService.updateCardDesc(cardDto, cardId);
+    return this.cardService.updateCard(cardDto, cardId);
   }
 
   @Post('/reorder/samelist')
