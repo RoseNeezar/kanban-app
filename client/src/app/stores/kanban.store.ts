@@ -33,7 +33,7 @@ export default class KanbanStore {
   get GetCardText() {
     let temp = this.AllCards?.find(
       (res) => res._id === this.editCardID?.cardID
-    )?.title;
+    );
     return temp;
   }
 
@@ -292,9 +292,13 @@ export default class KanbanStore {
     }
   };
 
-  UpdateCard = async (title: string, cardId: string) => {
+  UpdateCard = async (title: string, descriptions: string, cardId: string) => {
     try {
-      const result = await agent.KanbanService.updateCard(title, cardId);
+      const result = await agent.KanbanService.updateCard(
+        title,
+        descriptions,
+        cardId
+      );
       runInAction(() => {
         let indexTodo = this.AllCards!.findIndex(
           (res) => res._id === result.data._id

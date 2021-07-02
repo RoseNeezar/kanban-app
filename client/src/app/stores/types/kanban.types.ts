@@ -56,6 +56,7 @@ export interface IGetAllListFromBoard {
 export interface ICard {
   _id: string;
   title: string;
+  descriptions: string;
   list: string;
 }
 
@@ -80,6 +81,7 @@ export interface IUpdateCard {
   data: {
     _id: string;
     title: string;
+    descriptions: string;
     list: string;
     cardId: string;
   };

@@ -3,6 +3,24 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            color: "inherit",
+            " p": {
+              color: "inherit",
+            },
+            "h1, h2, h3, h4, h5, h6": {
+              color: "inherit",
+              fontSize: "160%",
+            },
+            strong: {
+              color: "inherit",
+              fontWeight: "bold",
+            },
+          },
+        },
+      },
       gridTemplateColumns: {
         fit: "repeat(auto-fit, 18rem)",
       },
@@ -32,8 +50,13 @@ module.exports = {
       },
     },
   },
+
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/typography")({
+      modifiers: ["color"],
+    }),
+  ],
 };

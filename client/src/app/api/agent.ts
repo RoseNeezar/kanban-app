@@ -55,8 +55,12 @@ const KanbanService = {
       title: title,
     }),
 
-  updateCard: (title: string, cardId: string): Promise<IUpdateCard> =>
-    requests.post(`/cards/card/${cardId}`, { title: title }),
+  updateCard: (
+    title: string,
+    descriptions: string,
+    cardId: string
+  ): Promise<IUpdateCard> =>
+    requests.post(`/cards/card/${cardId}`, { title, descriptions }),
 
   updateList: (title: string, listId: string): Promise<IUpdateList> =>
     requests.post(`/lists/${listId}`, { title: title }),

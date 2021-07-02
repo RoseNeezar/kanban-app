@@ -40,13 +40,13 @@ const KanbanAddAction: FC<IKanbanAddAction> = ({ list, id }) => {
 
           <div className="flex justify-between ">
             <button
-              className="p-1 text-white bg-green-900 rounded-md"
+              className="p-2 text-white bg-green-900 rounded-md"
               onClick={() => HandleAdd()}
             >
               {list ? "Enter list" : "Enter card"}
             </button>
             <button
-              className="p-1 text-white bg-red-900 rounded-md"
+              className="p-2 text-white bg-red-900 rounded-md"
               onClick={() => setOpenForm(false)}
             >
               cancel

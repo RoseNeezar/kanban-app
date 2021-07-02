@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import {
   DragDropContext,
   DragUpdate,
@@ -7,22 +7,22 @@ import {
 } from "react-beautiful-dnd";
 import { useStore } from "../../stores/store";
 import Head from "next/head";
-import ListModal from "react-modal";
 import { observer, Observer } from "mobx-react-lite";
 import KanbanModal from "./KanbanModal";
 import KanbanAddAction from "./KanbanAddAction";
 import KanbanList from "./KanbanList";
+import { Dialog, Transition } from "@headlessui/react";
 
 const ModalLayout = {
   content: {
-    top: "40rem",
+    top: "35rem",
     left: "50%",
     right: "auto",
     bottom: "auto",
     transform: "translate(-50%, -30rem)",
 
     width: "60rem",
-    borderRadius: "5rem",
+    padding: "0px",
     backgroundColor: "transparent",
     border: "none",
   },
@@ -32,7 +32,7 @@ const ModalLayout = {
     right: "0",
     bottom: "0",
     overflow: "auto",
-    backgroundColor: "rgba(70,69,72,0.5)",
+    backgroundColor: "rgba(70,69,72,0.4)",
   },
 };
 
@@ -82,15 +82,30 @@ const KanbanLayout = () => {
         <title>Kanban App</title>
       </Head>
       <div className="flex flex-row justify-center h-screen pt-12 overflow-scroll bg-dark-main ">
-        <ListModal
-          style={ModalLayout}
-          isOpen={openEditTodoModal}
-          onRequestClose={() => setOpenEditTodoModal(false)}
-          ariaHideApp={false}
-        >
-          <KanbanModal />
-        </ListModal>
-
+        <Transition appear show={openEditTodoModal} as={Fragment}>
+          <Dialog
+            as="div"
+            className="fixed inset-0 z-50 overflow-y-auto"
+            onClose={() => setOpenEditTodoModal(false)}
+          >
+            <div className="min-h-screen px-4 text-center">
+              <Dialog.Overlay className="fixed inset-0 bg-gray-600 opacity-25" />
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <div className="inline-block w-full max-w-6xl my-16 overflow-hidden text-left align-middle transition-all transform shadow-xl rounded-2xl">
+                  <KanbanModal />
+                </div>
+              </Transition.Child>
+            </div>
+          </Dialog>
+        </Transition>
         {LoadingNotes ? (
           <h1>Loading...</h1>
         ) : (
