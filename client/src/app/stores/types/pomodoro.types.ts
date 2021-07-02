@@ -1,6 +1,6 @@
 export interface ITimer {
   long: number;
-  active: IActiveState;
+  active: string;
   short: number;
   work: number;
 }

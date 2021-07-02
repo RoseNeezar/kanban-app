@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "../../stores/store";
 import TextAreaAuto from "react-textarea-autosize";
 import { observer } from "mobx-react-lite";
@@ -6,8 +6,8 @@ import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialOceanic } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { toJS } from "mobx";
-import { Dialog } from "@headlessui/react";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { Dialog, Transition } from "@headlessui/react";
 
 const components = {
   code({ node, inline, className, children, ...props }: any) {
@@ -29,21 +29,68 @@ const components = {
   },
 };
 
+const timerCount = ({ remainingTime }: any) => {
+  const minutes = Math.floor(remainingTime / 60);
+  const seconds = remainingTime % 60;
+
+  if (seconds === 0) {
+    return <p className="text-4xl text-dark-txt">{`${minutes}:${seconds}0`}</p>;
+  }
+  if (seconds / 10 < 1) {
+    return <p className="text-4xl text-dark-txt">{`${minutes}:0${seconds}`}</p>;
+  }
+  return <p className="text-4xl text-dark-txt">{`${minutes}:${seconds}`}</p>;
+};
+
 const KanbanModal = () => {
   const {
     kanbanStore: {
       GetCardText,
       editCardID,
-      deleteList,
       setOpenEditTodoModal,
       DeleteCard,
       UpdateCard,
     },
+    pomodoroStore: {
+      executing,
+      startAnimate,
+      updateExecute,
+      pomodoro,
+      stopAnimate,
+      setStartAnimte,
+      setCurrentTimer,
+    },
   } = useStore();
   const [textInput, setTextInput] = useState(GetCardText?.title);
-
   const [edit, setEdit] = useState(false);
   const [descp, setDescp] = useState(GetCardText?.descriptions);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const tabRef = useRef(0);
+  const tabs = [
+    {
+      placeholder: "Pomodoro",
+      state: "work",
+    },
+    {
+      placeholder: "Short Break",
+      state: "short",
+    },
+    {
+      placeholder: "Long Break",
+      state: "long",
+    },
+  ];
+
+  const handleTimerState = () => {
+    if (tabRef.current >= 2) {
+      tabRef.current = 0;
+      setCurrentTimer(tabs[tabRef.current].state);
+      return;
+    }
+    tabRef.current++;
+    setCurrentTimer(tabs[tabRef.current].state);
+  };
 
   const HandleDelete = () => {
     DeleteCard(editCardID!.cardID);
@@ -58,8 +105,16 @@ const KanbanModal = () => {
     ) {
       UpdateCard(textInput, descp, editCardID!.cardID);
     }
-    setOpenEditTodoModal(false);
+    setEdit(false);
   };
+
+  const HandleStartPomodoro = () => {
+    setStartAnimte(!startAnimate);
+  };
+
+  useEffect(() => {
+    updateExecute(executing);
+  }, [executing, startAnimate]);
 
   return (
     <div className="flex flex-col w-full p-5 pt-3 m-auto rounded-md bg-dark-main">
@@ -76,9 +131,10 @@ const KanbanModal = () => {
           {typeof GetCardText?.title === "string" && (
             <Dialog.Title>
               <input
+                onBlur={() => HandleEdit()}
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
-                className="w-full p-2 overflow-scroll text-2xl rounded-md focus:outline-none focus:ring focus:border-gray-200 text-dark-txt bg-dark-main"
+                className="w-full p-2 overflow-scroll text-2xl font-bold rounded-md focus:outline-none focus:ring focus:border-gray-200 text-dark-txt bg-dark-main"
               />
             </Dialog.Title>
           )}
@@ -89,7 +145,7 @@ const KanbanModal = () => {
           {edit ? (
             <TextAreaAuto
               autoFocus
-              onBlur={() => setEdit(false)}
+              onBlur={() => HandleEdit()}
               value={descp}
               onChange={(e) => setDescp(e.target.value)}
               className="w-full p-2 pb-10 mb-10 overflow-scroll rounded-md text-dark-txt bg-dark-third"
@@ -111,25 +167,64 @@ const KanbanModal = () => {
               Enter a description...
             </div>
           )}
-          <div className="flex justify-between ">
-            <button
-              className="w-20 p-2 text-white bg-green-900 rounded-md hover:bg-green-800"
-              onClick={() => HandleEdit()}
+        </div>
+        <div className="flex flex-col w-1/6 pl-4 ">
+          <div
+            onClick={() => handleTimerState()}
+            className="flex items-center justify-center w-40 h-10 p-2 mt-2 mb-10 text-xl font-bold cursor-pointer text-dark-txt bg-dark-third rounded-2xl"
+          >
+            <p>{tabs[tabRef.current].placeholder}</p>
+          </div>
+          <div className="relative flex items-center justify-center w-full mb-10 cursor-pointer">
+            <CountdownCircleTimer
+              key={pomodoro}
+              size={170}
+              isPlaying={startAnimate}
+              duration={pomodoro * 60}
+              colors={[
+                ["#47DC84", 0.33],
+                ["#47DC84", 0.33],
+                ["#991C1C", 0.33],
+              ]}
+              trailColor="#18191A"
+              onComplete={() => {
+                stopAnimate();
+              }}
             >
-              Save
-            </button>
+              {timerCount}
+            </CountdownCircleTimer>
+          </div>
+          {!startAnimate ? (
+            <div
+              onClick={() => HandleStartPomodoro()}
+              className="absolute flex items-center justify-center w-48 h-48 text-white bg-green-700 rounded-full opacity-0 cursor-pointer right-2 a top-32 hover:opacity-100"
+            >
+              <p className="text-3xl">Start</p>
+            </div>
+          ) : (
+            <div
+              onClick={() => HandleStartPomodoro()}
+              className="absolute flex items-center justify-center w-48 h-48 text-white bg-yellow-700 rounded-full opacity-0 cursor-pointer right-2 a top-32 hover:opacity-100"
+            >
+              <p className="text-3xl">Pause</p>
+            </div>
+          )}
+          {!confirmDelete ? (
             <button
-              className="w-20 p-2 text-white bg-red-900 rounded-md hover:bg-red-800"
-              onClick={() => HandleDelete()}
+              className="p-2 mt-auto text-white bg-red-900 rounded-md w-44 hover:bg-red-800"
+              onClick={() => setConfirmDelete(true)}
             >
               Delete
             </button>
-          </div>
-        </div>
-        <div className="flex w-1/6 pl-4 ">
-          <div className="flex items-center justify-center w-40 h-10 p-2 mt-2 text-xl font-bold text-dark-txt bg-dark-third rounded-2xl">
-            <p>Pomodoro</p>
-          </div>
+          ) : (
+            <button
+              className="p-2 mt-auto text-white bg-red-900 rounded-md w-44 hover:bg-red-800"
+              onClick={() => HandleDelete()}
+              onMouseLeave={() => setConfirmDelete(false)}
+            >
+              Confirm ?
+            </button>
+          )}
         </div>
       </div>
     </div>

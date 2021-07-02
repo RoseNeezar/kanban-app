@@ -9,7 +9,7 @@ export default class PomodoroStore {
   executing: ITimer = {
     active: "work",
     long: 15,
-    short: 10,
+    short: 5,
     work: 25,
   };
   startAnimate = false;
@@ -30,7 +30,7 @@ export default class PomodoroStore {
     this.startAnimate = false;
   };
 
-  setCurrentTimer = (state: IActiveState) => {
+  setCurrentTimer = (state: string) => {
     this.updateExecute({
       ...(this.executing as ITimer),
       active: state,
