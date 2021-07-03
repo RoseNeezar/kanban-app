@@ -24,8 +24,7 @@ const MainPage = () => {
 
   const HandleBoard = (boardId: string) => {
     setListInCurrentBoard(null);
-    setCurrentBoardId(boardId);
-    history.push("/kanban");
+    history.push(`/board/${boardId}`);
   };
   const HandleAddBoard = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {

@@ -257,14 +257,14 @@ const KanbanModal = () => {
           )}
           {!confirmDelete ? (
             <button
-              className="p-2 mt-auto text-white bg-red-900 rounded-md w-44 hover:bg-red-800"
+              className="p-2 mt-1 text-white bg-red-900 rounded-md w-44 hover:bg-red-800"
               onClick={() => setConfirmDelete(true)}
             >
               Delete
             </button>
           ) : (
             <button
-              className="p-2 mt-auto text-white bg-red-900 rounded-md w-44 hover:bg-red-800"
+              className="p-2 mt-1 text-white bg-red-900 rounded-md w-44 hover:bg-red-800"
               onClick={() => HandleDelete()}
               onMouseLeave={() => setConfirmDelete(false)}
             >

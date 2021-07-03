@@ -12,6 +12,7 @@ import KanbanModal from "./KanbanModal";
 import KanbanAddAction from "./KanbanAddAction";
 import KanbanList from "./KanbanList";
 import { Dialog, Transition } from "@headlessui/react";
+import { useParams } from "react-router-dom";
 
 const ModalLayout = {
   content: {
@@ -37,6 +38,7 @@ const ModalLayout = {
 };
 
 const KanbanLayout = () => {
+  const { id } = useParams<{ id: string }>();
   const {
     kanbanStore: {
       sortKanban,
@@ -50,6 +52,7 @@ const KanbanLayout = () => {
       getAllList,
       AllCards,
       LoadingNotes,
+      setCurrentBoardId,
     },
     pomodoroStore: { stopTimer, resetTimer },
   } = useStore();
@@ -73,9 +76,11 @@ const KanbanLayout = () => {
       type
     );
   };
+
   useEffect(() => {
-    GetList(currentBoardId);
-  }, []);
+    GetList(id);
+    setCurrentBoardId(id);
+  }, [id, GetList, setCurrentBoardId]);
 
   const HandleClosingModal = () => {
     stopTimer();
