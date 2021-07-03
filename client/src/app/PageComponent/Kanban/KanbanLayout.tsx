@@ -51,6 +51,7 @@ const KanbanLayout = () => {
       AllCards,
       LoadingNotes,
     },
+    pomodoroStore: { stopTimer, resetTimer },
   } = useStore();
 
   const BoardTitle = () => {
@@ -77,6 +78,8 @@ const KanbanLayout = () => {
   }, []);
 
   const HandleClosingModal = () => {
+    stopTimer();
+    resetTimer();
     setOpenEditTodoModal(false);
   };
 

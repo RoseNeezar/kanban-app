@@ -1,49 +1,63 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable, toJS } from "mobx";
 import { enableStaticRendering } from "mobx-react-lite";
-import { IActiveState, ITimer } from "./types/pomodoro.types";
+import { ITimer } from "./types/pomodoro.types";
 
 enableStaticRendering(typeof window === "undefined");
 
 export default class PomodoroStore {
   pomodoro = 0;
-  executing: ITimer = {
+  timerEvents: ITimer = {
     active: "work",
     long: 15,
-    short: 5,
+    short: 1,
     work: 25,
   };
-  startAnimate = false;
+  timerState = false;
+  timerEnd = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  setStartAnimte = (state: boolean) => {
-    this.startAnimate = state;
+  setStartTimer = (state: boolean) => {
+    this.timerState = state;
+  };
+
+  setTimerEnd = (state: boolean) => {
+    this.timerEnd = state;
   };
 
   startTimer = () => {
-    this.startAnimate = true;
+    this.timerState = true;
   };
 
   pauseTimer = () => {
-    this.startAnimate = false;
+    this.timerState = false;
+  };
+
+  resetTimer = () => {
+    this.timerEvents = {
+      active: "work",
+      long: 15,
+      short: 1,
+      work: 25,
+    };
   };
 
   setCurrentTimer = (state: string) => {
-    this.updateExecute({
-      ...(this.executing as ITimer),
+    this.updateTimerEvents({
+      ...(this.timerEvents as ITimer),
       active: state,
     });
-    this.setTimerState(this.executing as ITimer);
+    this.setTimerEvents(this.timerEvents as ITimer);
   };
 
-  updateExecute = (settings: ITimer) => {
-    this.executing = settings;
-    this.setTimerState(settings);
+  updateTimerEvents = (settings: ITimer) => {
+    this.timerEvents = settings;
+    this.setTimerEvents(settings);
   };
 
-  setTimerState = (evaluate: ITimer) => {
+  setTimerEvents = (evaluate: ITimer) => {
     switch (evaluate.active) {
       case "work":
         this.pomodoro = evaluate.work;
@@ -60,8 +74,8 @@ export default class PomodoroStore {
     }
   };
 
-  stopAnimate = () => {
-    this.startAnimate = false;
-    alert("Done");
+  stopTimer = () => {
+    this.setTimerEnd(false);
+    this.timerState = false;
   };
 }

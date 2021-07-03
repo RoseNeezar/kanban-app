@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useStore } from "../../stores/store";
-import TextAreaAuto from "react-textarea-autosize";
+import { Dialog } from "@headlessui/react";
 import { observer } from "mobx-react-lite";
+import React, { useEffect, useRef, useState } from "react";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Markdown from "react-markdown";
-import gfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialOceanic } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { Dialog, Transition } from "@headlessui/react";
+import TextAreaAuto from "react-textarea-autosize";
+import gfm from "remark-gfm";
+import { useStore } from "../../stores/store";
 
 const components = {
   code({ node, inline, className, children, ...props }: any) {
@@ -29,9 +29,24 @@ const components = {
   },
 };
 
-const timerCount = ({ remainingTime }: any) => {
+const TimerCount = ({ setTimerEnd, remainingTime }: any) => {
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      if (remainingTime === 0) {
+        setTimerEnd(true);
+      }
+    }
+  }, [remainingTime]);
+
+  if (remainingTime === 0) {
+    return <p className="table-caption text-2xl text-dark-txt">Timer Done!</p>;
+  }
 
   if (seconds === 0) {
     return <p className="text-4xl text-dark-txt">{`${minutes}:${seconds}0`}</p>;
@@ -52,20 +67,24 @@ const KanbanModal = () => {
       UpdateCard,
     },
     pomodoroStore: {
-      executing,
-      startAnimate,
-      updateExecute,
+      timerEvents,
+      timerState,
+      updateTimerEvents,
       pomodoro,
-      stopAnimate,
-      setStartAnimte,
+      stopTimer,
+      setStartTimer,
       setCurrentTimer,
+      timerEnd,
+      setTimerEnd,
     },
   } = useStore();
   const [textInput, setTextInput] = useState(GetCardText?.title);
   const [edit, setEdit] = useState(false);
   const [descp, setDescp] = useState(GetCardText?.descriptions);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [key, setKey] = useState(25);
 
+  const isInitialMount = useRef(true);
   const tabRef = useRef(0);
   const tabs = [
     {
@@ -83,6 +102,10 @@ const KanbanModal = () => {
   ];
 
   const handleTimerState = () => {
+    setStartTimer(false);
+    setTimerEnd(false);
+    setKey((prevKey) => prevKey + 1);
+
     if (tabRef.current >= 2) {
       tabRef.current = 0;
       setCurrentTimer(tabs[tabRef.current].state);
@@ -90,6 +113,12 @@ const KanbanModal = () => {
     }
     tabRef.current++;
     setCurrentTimer(tabs[tabRef.current].state);
+  };
+
+  const handleTimerReset = () => {
+    setKey((prevKey) => prevKey + 1);
+
+    setTimerEnd(false);
   };
 
   const HandleDelete = () => {
@@ -109,12 +138,18 @@ const KanbanModal = () => {
   };
 
   const HandleStartPomodoro = () => {
-    setStartAnimte(!startAnimate);
+    setStartTimer(!timerState);
   };
 
   useEffect(() => {
-    updateExecute(executing);
-  }, [executing, startAnimate]);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      setKey((prevKey) => prevKey + 1);
+      updateTimerEvents(timerEvents);
+    } else {
+      updateTimerEvents(timerEvents);
+    }
+  }, [timerEvents, timerState]);
 
   return (
     <div className="flex flex-col w-full p-5 pt-3 m-auto rounded-md bg-dark-main">
@@ -175,11 +210,12 @@ const KanbanModal = () => {
           >
             <p>{tabs[tabRef.current].placeholder}</p>
           </div>
+
           <div className="relative flex items-center justify-center w-full mb-10 cursor-pointer">
             <CountdownCircleTimer
-              key={pomodoro}
+              key={key}
               size={170}
-              isPlaying={startAnimate}
+              isPlaying={timerState}
               duration={pomodoro * 60}
               colors={[
                 ["#47DC84", 0.33],
@@ -188,25 +224,35 @@ const KanbanModal = () => {
               ]}
               trailColor="#18191A"
               onComplete={() => {
-                stopAnimate();
+                stopTimer();
               }}
             >
-              {timerCount}
+              <TimerCount setTimerEnd={setTimerEnd} />
             </CountdownCircleTimer>
           </div>
-          {!startAnimate ? (
-            <div
-              onClick={() => HandleStartPomodoro()}
-              className="absolute flex items-center justify-center w-48 h-48 text-white bg-green-700 rounded-full opacity-0 cursor-pointer right-2 a top-32 hover:opacity-100"
-            >
-              <p className="text-3xl">Start</p>
-            </div>
+
+          {!timerEnd ? (
+            !timerState ? (
+              <div
+                onClick={() => HandleStartPomodoro()}
+                className="absolute flex items-center justify-center w-48 h-48 text-white bg-green-700 rounded-full opacity-0 cursor-pointer right-2 a top-32 hover:opacity-100"
+              >
+                <p className="text-3xl">Start</p>
+              </div>
+            ) : (
+              <div
+                onClick={() => HandleStartPomodoro()}
+                className="absolute flex items-center justify-center w-48 h-48 text-white bg-yellow-400 rounded-full opacity-0 cursor-pointer right-2 a top-32 hover:opacity-100"
+              >
+                <p className="text-3xl">Pause</p>
+              </div>
+            )
           ) : (
             <div
-              onClick={() => HandleStartPomodoro()}
+              onClick={() => handleTimerReset()}
               className="absolute flex items-center justify-center w-48 h-48 text-white bg-yellow-700 rounded-full opacity-0 cursor-pointer right-2 a top-32 hover:opacity-100"
             >
-              <p className="text-3xl">Pause</p>
+              <p className="text-3xl">Reset</p>
             </div>
           )}
           {!confirmDelete ? (
