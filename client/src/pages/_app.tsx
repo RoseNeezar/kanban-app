@@ -2,6 +2,7 @@ import { AppProps } from "next/app";
 import axios from "axios";
 import "../styles/tailwind.css";
 import { store, StoreContext } from "../app/stores/store";
+import { BrowserRouter } from "react-router-dom";
 
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + "/api";
 axios.defaults.withCredentials = true;
@@ -11,7 +12,9 @@ function App({ Component, pageProps }: AppProps) {
     <div suppressHydrationWarning>
       {typeof window === "undefined" ? null : (
         <StoreContext.Provider value={store}>
-          <Component {...pageProps} />
+          <BrowserRouter>
+            <Component {...pageProps} />
+          </BrowserRouter>
         </StoreContext.Provider>
       )}
     </div>

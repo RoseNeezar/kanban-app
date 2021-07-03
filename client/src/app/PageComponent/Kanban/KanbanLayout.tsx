@@ -78,6 +78,7 @@ const KanbanLayout = () => {
   };
 
   useEffect(() => {
+    console.log("board", id);
     GetList(id);
     setCurrentBoardId(id);
   }, [id, GetList, setCurrentBoardId]);

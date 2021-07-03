@@ -8,39 +8,36 @@ import MainPage from "../app/PageComponent/Main";
 import NotFound from "../app/PageComponent/NotFound/NotFound";
 import Register from "../app/PageComponent/register/Register";
 import { useStore } from "../app/stores/store";
-import ProtectAuthRoute from "../app/utils/ProtectAuthRoute";
 import ProtectedRoute from "../app/utils/ProtectedRoute";
 
 const App = () => {
   const { userStore } = useStore();
-  const { isLoggedIn } = userStore;
+  const { setAppLoaded, appLoaded } = userStore;
   useEffect(() => {
-    userStore.getUser().finally(() => console.log(""));
-  }, [userStore, isLoggedIn]);
+    userStore.getUser().finally(() => setAppLoaded());
+  }, [userStore, setAppLoaded]);
+  if (!appLoaded) return <h1>Loading App</h1>;
   return (
-    <Router basename="/">
-      <Switch>
-        <ProtectedRoute exact path="/">
-          <Navbar />
-          <MainPage />
-        </ProtectedRoute>
-        <ProtectedRoute exact path="/kanban">
-          <Navbar />
-          <KanbanLayout />
-        </ProtectedRoute>
-        <ProtectAuthRoute exact path="/login">
-          <Navbar />
-          <Login />
-        </ProtectAuthRoute>
-        <ProtectAuthRoute exact path="/register">
-          <Navbar />
-          <Register />
-        </ProtectAuthRoute>
-        <Route path="*">
-          <NotFound />
-        </Route>
-      </Switch>
-    </Router>
+    <>
+      <Route
+        render={() => (
+          <>
+            <Navbar />
+            <Switch>
+              <ProtectedRoute exact path="/" component={MainPage} />
+              <ProtectedRoute
+                exact
+                path="/board/:id"
+                component={KanbanLayout}
+              />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/register" component={Register} />
+              <Route component={NotFound} />
+            </Switch>
+          </>
+        )}
+      />
+    </>
   );
 };
 

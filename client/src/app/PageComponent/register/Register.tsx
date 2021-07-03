@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, FormEvent, useState } from "react";
+import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import InputGroup from "../../components/InputGroup";
 import Head from "next/head";
@@ -8,7 +8,7 @@ import { observer } from "mobx-react-lite";
 const Register: FC = () => {
   const history = useHistory();
   const {
-    userStore: { register },
+    userStore: { register, isLoggedIn },
   } = useStore();
   const [formState, setFormState] = useState({
     email: "",
@@ -31,7 +31,9 @@ const Register: FC = () => {
       );
     }
   };
-
+  useEffect(() => {
+    if (isLoggedIn) history.push("/");
+  }, [isLoggedIn]);
   return (
     <>
       <Head>

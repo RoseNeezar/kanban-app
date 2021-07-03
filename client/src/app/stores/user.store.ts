@@ -7,7 +7,8 @@ import { ILogin, IRegister, IUser } from "./types/user.types";
 enableStaticRendering(typeof window === "undefined");
 
 export default class UserStore {
-  user: IUser | null = null;
+  user: IUser | undefined = undefined;
+  appLoaded = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -56,11 +57,15 @@ export default class UserStore {
     try {
       await agent.AuthService.logout();
       runInAction(() => {
-        this.user = null;
+        this.user = undefined;
         return history.push("/login");
       });
     } catch (error) {
       console.log(error);
     }
+  };
+
+  setAppLoaded = () => {
+    this.appLoaded = true;
   };
 }

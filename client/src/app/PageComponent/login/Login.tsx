@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
-import React, { ChangeEvent, FC, FormEvent, useState } from "react";
+import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import InputGroup from "../../components/InputGroup";
 import { useStore } from "../../stores/store";
@@ -8,7 +8,7 @@ import { useStore } from "../../stores/store";
 const Login: FC = () => {
   const history = useHistory();
   const {
-    userStore: { login },
+    userStore: { login, isLoggedIn },
   } = useStore();
 
   const [formState, setFormState] = useState({
@@ -29,6 +29,10 @@ const Login: FC = () => {
       login({ username, password }, history).catch((err) => console.log(err));
     }
   };
+
+  // useEffect(() => {
+  //   if (isLoggedIn) history.push("/");
+  // }, [isLoggedIn]);
 
   return (
     <>
