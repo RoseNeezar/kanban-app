@@ -25,10 +25,13 @@ const requests = {
 };
 
 const AuthService = {
-  login: (data: ILogin) => requests.post<IUser>("auth/login", data),
+  login: (data: Pick<ILogin, "email" | "token">) =>
+    requests.post<IUser>("auth/login", data),
+  loginGoogle: (data: Pick<ILogin, "email" | "token">) =>
+    requests.post<IUser>("auth/login/google", data),
   register: (data: IRegister) => requests.post<void>("auth/register", data),
   logout: () => requests.post("auth/logout"),
-  currentUser: () => requests.get<IUser>("auth/me"),
+  currentUser: (data: Pick<ILogin, "token">) => requests.get<IUser>("auth/me"),
 };
 
 const KanbanService = {

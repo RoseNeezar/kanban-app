@@ -13,7 +13,6 @@ import { ICreateList, IUpdateListTitle } from './list.dto';
 import { ListService } from './list.service';
 
 @Controller('api/lists')
-@UseGuards(AuthGuard())
 export class ListController {
   constructor(private listService: ListService) {}
 

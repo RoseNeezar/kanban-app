@@ -6,6 +6,7 @@ interface InputGroupProps {
   placeholder: string;
   value: string;
   error?: string;
+  disable?: boolean;
   setValue: (
     name: string
   ) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -18,12 +19,14 @@ const InputGroup: FC<InputGroupProps> = ({
   value,
   error,
   setValue,
+  disable,
 }) => {
   return (
     <div className={className}>
       <input
         type={type}
-        className={`w-full p-3 transition duration-200 border border-gray-300 rounded outline-none bg-gray-50 ${
+        disabled={disable}
+        className={` w-full p-3 transition duration-200 border border-gray-300 rounded outline-none bg-gray-50 ${
           error && "border-red-500"
         }`}
         placeholder={placeholder}

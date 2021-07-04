@@ -1,58 +1,47 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { ReturnModelType } from '@typegoose/typegoose';
-import * as bcrypt from 'bcryptjs';
 import * as cookie from 'cookie';
 import { Response } from 'express';
 import { InjectModel } from 'nestjs-typegoose';
+import * as shortId from 'shortid';
 import { User } from 'src/models/user.model';
 import { ErrorSanitizer } from 'src/utils/error.utils';
-import { AuthCredentialDto, TokenPayload } from './auth.dto';
+import { AuthCredentialDto } from './auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
-    private jwtService: JwtService,
   ) {}
 
-  async register(authCredentialDto: AuthCredentialDto) {
-    const { email, password, username } = authCredentialDto;
-    const user: User = {
-      username,
-      email,
-      password,
-    };
-    try {
-      await this.userModel.create(user);
-    } catch (error) {
-      throw new BadRequestException(ErrorSanitizer(error));
-    }
-  }
-
   async login(
-    authCredentialDto: Omit<AuthCredentialDto, 'email'>,
+    authCredentialDto: Pick<AuthCredentialDto, 'token' | 'email'>,
     res: Response,
   ) {
     try {
-      const { username, password } = authCredentialDto;
+      const { email, token } = authCredentialDto;
 
-      const user = await this.userModel
-        .findOne({ username })
-        .select('+password');
+      const oldUser = await this.userModel.findOne({ email });
 
-      if (!user) {
-        throw new BadRequestException();
+      if (oldUser) {
+        const cookie = this.getCookieWithJwtToken(token);
+
+        res.setHeader('Set-Cookie', cookie);
+        return res.send(oldUser);
       }
-      const passwordMatches = await bcrypt.compare(password, user.password);
-      if (!passwordMatches) {
-        throw new BadRequestException();
-      }
-      const cookie = this.getCookieWithJwtToken(user._id);
+
+      const user: User = {
+        username: shortId.generate(),
+        email,
+      };
+
+      const newUser = await this.userModel.create(user);
+
+      const cookie = this.getCookieWithJwtToken(token);
 
       res.setHeader('Set-Cookie', cookie);
-      user.password = undefined;
-      return res.send(user);
+
+      return res.send(newUser);
     } catch (error) {
       throw new BadRequestException(ErrorSanitizer(error));
     }
@@ -73,9 +62,7 @@ export class AuthService {
     });
   }
 
-  public getCookieWithJwtToken(userId: number) {
-    const payload: TokenPayload = { userId };
-    const token = this.jwtService.sign(payload);
+  public getCookieWithJwtToken(token: string) {
     return cookie.serialize('tokenKanban', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -96,8 +83,8 @@ export class AuthService {
     }
   }
 
-  public async customGetUserById(userId: number) {
-    const user = await this.userModel.findOne({ id: userId });
+  public async getUserByEmail(email: string) {
+    const user = await this.userModel.findOne({ email });
     if (user) {
       return user;
     }

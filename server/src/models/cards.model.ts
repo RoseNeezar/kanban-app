@@ -17,6 +17,7 @@ export class Cards {
 
   @prop({
     ref: 'List',
+    index: true,
   })
   list: Ref<List>;
 }

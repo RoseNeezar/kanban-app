@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { enableStaticRendering } from "mobx-react-lite";
 import { RouteComponentProps } from "react-router-dom";
 import agent from "../api/agent";
+import { auth } from "../utils/firebase";
 import { ILogin, IRegister, IUser } from "./types/user.types";
 
 enableStaticRendering(typeof window === "undefined");
@@ -18,10 +19,29 @@ export default class UserStore {
     return !!this.user;
   }
 
-  login = async (login: ILogin, history: RouteComponentProps["history"]) => {
+  login = async (
+    login: Pick<ILogin, "email" | "token">,
+    history: RouteComponentProps["history"]
+  ) => {
     try {
       const result = await agent.AuthService.login(login);
       runInAction(() => {
+        this.user = result;
+        history.push("/");
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  loginGoogle = async (
+    login: Pick<ILogin, "email" | "token">,
+    history: RouteComponentProps["history"]
+  ) => {
+    try {
+      const result = await agent.AuthService.loginGoogle(login);
+      runInAction(() => {
+        console.log("login google");
         this.user = result;
         history.push("/");
       });
@@ -46,8 +66,13 @@ export default class UserStore {
 
   getUser = async () => {
     try {
-      const result = await agent.AuthService.currentUser();
-      runInAction(() => (this.user = result));
+      const token = (await auth.currentUser?.getIdToken()) as string;
+
+      const result = await agent.AuthService.currentUser({ token });
+      runInAction(() => {
+        console.log("token", token);
+        this.user = result;
+      });
     } catch (error) {
       console.log(error);
     }
@@ -56,6 +81,7 @@ export default class UserStore {
   logout = async (history: RouteComponentProps["history"]) => {
     try {
       await agent.AuthService.logout();
+
       runInAction(() => {
         this.user = undefined;
         return history.push("/login");

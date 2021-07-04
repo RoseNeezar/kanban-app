@@ -4,18 +4,19 @@ import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import InputGroup from "../../components/InputGroup";
 import { useStore } from "../../stores/store";
+import { auth, googleAuthProvider } from "../../utils/firebase";
 
 const Login: FC = () => {
   const history = useHistory();
   const {
-    userStore: { login, isLoggedIn },
+    userStore: { login, loginGoogle },
   } = useStore();
 
   const [formState, setFormState] = useState({
-    username: "",
+    email: "",
     password: "",
   });
-  const { username, password } = formState;
+  const { email, password } = formState;
 
   const onChangeText =
     (name: string) =>
@@ -23,16 +24,31 @@ const Login: FC = () => {
       setFormState({ ...formState, [name]: e.target.value });
     };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (username && password) {
-      login({ username, password }, history).catch((err) => console.log(err));
+    if (email && password) {
+      try {
+        const result = await auth.signInWithEmailAndPassword(email, password);
+        const idToken = await result.user?.getIdTokenResult();
+        const token = idToken?.token as string;
+
+        login({ email, token }, history).catch((err) => console.log(err));
+      } catch (error) {}
     }
   };
 
-  // useEffect(() => {
-  //   if (isLoggedIn) history.push("/");
-  // }, [isLoggedIn]);
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await auth.signInWithPopup(googleAuthProvider);
+      const idToken = await result.user?.getIdTokenResult();
+      const token = idToken?.token as string;
+
+      loginGoogle(
+        { email: result.user?.email as string, token },
+        history
+      ).catch((err) => console.log(err));
+    } catch (error) {}
+  };
 
   return (
     <>
@@ -45,8 +61,8 @@ const Login: FC = () => {
           <form onSubmit={handleSubmit} className="flex flex-col w-full ">
             <InputGroup
               className="mb-10"
-              type="username"
-              value={username}
+              type="email"
+              value={email}
               setValue={onChangeText}
               placeholder="Username"
             />
@@ -58,10 +74,17 @@ const Login: FC = () => {
               placeholder="Password"
             />
 
-            <button className="self-center w-1/2 py-6 mt-10 mb-4 text-lg font-bold text-white uppercase rounded-2xl bg-dark-main">
+            <button className="self-center w-1/2 py-6 mt-4 mb-4 text-lg font-bold text-white uppercase hover:bg-dark-third rounded-2xl bg-dark-main">
               Login
             </button>
           </form>
+          <button
+            onClick={() => handleGoogleLogin()}
+            className="flex items-center justify-between h-12 px-4 mb-10 text-white bg-blue-600 rounded-md hover:bg-blue-500 w-52"
+          >
+            <i className="text-2xl bx bxl-google"></i>
+            <p>Sign in with google</p>
+          </button>
           <small className="flex flex-row">
             <p className="text-gray-400"> Dont have an account?</p>
             <Link to="/register">

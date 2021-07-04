@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LoadingPage from "../app/components/Loading/LoadingPage";
 import Navbar from "../app/components/Navbar/Navbar";
+import CompleteRegistration from "../app/PageComponent/confirmUser/CompleteRegistration";
 import KanbanLayout from "../app/PageComponent/Kanban/KanbanLayout";
 import Login from "../app/PageComponent/login/Login";
 import MainPage from "../app/PageComponent/Main";
@@ -33,6 +34,11 @@ const App = () => {
               />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
+              <Route
+                exact
+                path="/complete-registration"
+                component={CompleteRegistration}
+              />
               <Route component={NotFound} />
             </Switch>
           </>

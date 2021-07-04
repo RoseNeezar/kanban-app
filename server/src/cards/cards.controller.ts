@@ -18,7 +18,6 @@ import {
 import { CardsService } from './cards.service';
 
 @Controller('api/cards')
-@UseGuards(AuthGuard())
 export class CardsController {
   constructor(private cardService: CardsService) {}
 

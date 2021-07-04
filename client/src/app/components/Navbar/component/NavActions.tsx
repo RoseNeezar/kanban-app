@@ -2,6 +2,7 @@ import React from "react";
 
 import { useHistory } from "react-router";
 import { useStore } from "../../../stores/store";
+import { auth } from "../../../utils/firebase";
 
 const NavActions = () => {
   const {
@@ -9,13 +10,14 @@ const NavActions = () => {
   } = useStore();
   const history = useHistory();
   const handleLogout = async () => {
+    await auth.signOut();
     await logout(history);
   };
   return (
     <>
       <ul className="flex items-center justify-center mx-4">
         <li>
-          <p className="text-dark-txt">{user?.username}</p>
+          <p className="text-dark-txt">{user?.email}</p>
         </li>
         <li>
           <div

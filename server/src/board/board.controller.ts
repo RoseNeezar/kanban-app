@@ -16,7 +16,6 @@ import { ICreateBoard, IUpdateListOrder } from './board.dto';
 import { BoardService } from './board.service';
 
 @Controller('api/boards')
-@UseGuards(AuthGuard())
 export class BoardController {
   constructor(private boardService: BoardService) {}
 

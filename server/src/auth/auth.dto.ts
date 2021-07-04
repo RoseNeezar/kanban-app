@@ -1,10 +1,4 @@
-import {
-  IsString,
-  MinLength,
-  MaxLength,
-  IsEmail,
-  Length,
-} from 'class-validator';
+import { IsEmail, IsString, Length } from 'class-validator';
 
 export class AuthCredentialDto {
   @IsString()
@@ -19,10 +13,19 @@ export class AuthCredentialDto {
   @Length(6, 255, { message: 'Password must be at least 6 characters long' })
   password: string;
 
-  constructor(email: string, username: string, password: string) {
+  @IsString()
+  token: string;
+
+  constructor(
+    email: string,
+    username: string,
+    password: string,
+    token: string,
+  ) {
     this.email = email;
     this.username = username;
     this.password = password;
+    this.token = token;
   }
 }
 

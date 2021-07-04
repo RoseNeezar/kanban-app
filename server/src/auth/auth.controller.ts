@@ -19,17 +19,20 @@ import { GetUser } from './get-user.decorator';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/register')
-  register(
-    @Body(ValidationPipe) authCredentialDto: AuthCredentialDto,
-  ): Promise<void> {
-    return this.authService.register(authCredentialDto);
-  }
-
   @Post('/login')
   login(
     @Res() res: Response,
-    @Body(ValidationPipe) authCredentialDto: Omit<AuthCredentialDto, 'email'>,
+    @Body(ValidationPipe)
+    authCredentialDto: Pick<AuthCredentialDto, 'token' | 'email' | 'password'>,
+  ): Promise<any> {
+    return this.authService.login(authCredentialDto, res);
+  }
+
+  @Post('/login/google')
+  googleLogin(
+    @Res() res: Response,
+    @Body(ValidationPipe)
+    authCredentialDto: Pick<AuthCredentialDto, 'token' | 'email'>,
   ): Promise<any> {
     return this.authService.login(authCredentialDto, res);
   }
@@ -40,7 +43,6 @@ export class AuthController {
   }
 
   @Get('/me')
-  @UseGuards(AuthGuard())
   me(@GetUser() user: ReturnModelType<typeof User>) {
     return user;
   }

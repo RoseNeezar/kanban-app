@@ -14,7 +14,6 @@ const MainPage = () => {
       DeleteBoard,
       setListInCurrentBoard,
     },
-    userStore: { user: currentUser },
   } = useStore();
   const [boardTitle, setBoardTitle] = useState("");
   useEffect(() => {
