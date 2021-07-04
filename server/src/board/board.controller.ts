@@ -16,17 +16,16 @@ import { ICreateBoard, IUpdateListOrder } from './board.dto';
 import { BoardService } from './board.service';
 
 @Controller('api/boards')
+@UseGuards(AuthGuard())
 export class BoardController {
   constructor(private boardService: BoardService) {}
 
   @Get('/all')
-  @UseGuards(AuthGuard())
   getAllBoards(@GetUser() user: User & { _id: Types.ObjectId }) {
     return this.boardService.getAllBoards(user._id);
   }
 
   @Post('/')
-  @UseGuards(AuthGuard())
   createBoard(
     @GetUser() user: User & { _id: Types.ObjectId },
     @Body() boardDto: ICreateBoard,

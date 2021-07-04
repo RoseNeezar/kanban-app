@@ -89,7 +89,7 @@ export class ListService {
     try {
       const board = await this.boardModel
         .findOne({ _id: boardId })
-        .select('listOrder');
+        .select('title listOrder');
       const list = await this.listModel
         .find({ board: boardId })
         .select('cardIds title _id');
