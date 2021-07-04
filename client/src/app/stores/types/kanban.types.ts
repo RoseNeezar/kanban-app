@@ -50,6 +50,7 @@ export interface IGetAllListFromBoard {
   board: {
     listOrder: [];
     _id: string;
+    title: string;
   };
 }
 

@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable, runInAction, toJS } from "mobx";
 import { enableStaticRendering } from "mobx-react-lite";
 import agent from "../api/agent";
 import {
@@ -26,6 +26,7 @@ export default class KanbanStore {
   getBoardCards: ICard[] | null = null;
   LoadingNotes = false;
   CardAdded: ICreateCard = {} as ICreateCard;
+  currentBoardTitle: string = "";
 
   constructor() {
     makeAutoObservable(this);
@@ -222,7 +223,8 @@ export default class KanbanStore {
           );
         });
         this.setListInCurrentBoard(order);
-
+        this.setCurrentBoardId(result.board._id);
+        this.currentBoardTitle = result.board.title;
         this.GetBoardCards();
       });
     } catch (error) {

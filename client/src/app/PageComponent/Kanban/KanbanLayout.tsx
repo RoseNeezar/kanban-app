@@ -53,7 +53,6 @@ const KanbanLayout = () => {
       getBoardLists,
       getBoardCards,
       LoadingNotes,
-      setCurrentBoardId,
     },
     pomodoroStore: { stopTimer, resetTimer },
   } = useStore();
@@ -80,8 +79,7 @@ const KanbanLayout = () => {
 
   useEffect(() => {
     GetBoardContent(id);
-    setCurrentBoardId(id);
-  }, [id, GetBoardContent, setCurrentBoardId]);
+  }, [id, GetBoardContent]);
 
   const HandleClosingModal = () => {
     stopTimer();

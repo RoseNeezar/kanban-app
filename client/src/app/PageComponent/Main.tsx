@@ -10,7 +10,6 @@ const MainPage = () => {
     kanbanStore: {
       GetAllBoards,
       allBoards,
-      setCurrentBoardId,
       CreateBoard,
       DeleteBoard,
       setListInCurrentBoard,
