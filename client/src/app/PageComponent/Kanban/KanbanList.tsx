@@ -23,16 +23,16 @@ interface IKanbanList {
 }
 const KanbanList: FC<IKanbanList> = ({ title, cards, id, index }) => {
   const {
-    kanbanStore: { AllCards, DeleteList, UpdateList },
+    kanbanStore: { getBoardCards, DeleteList, UpdateList },
   } = useStore();
   const [editList, setEditList] = useState(false);
   const [listText, setListText] = useState(title);
 
   const CardList = () => {
-    if (AllCards !== null) {
+    if (getBoardCards !== null) {
       let temp: ICard[] = [];
       toJS(cards)?.forEach((res) => {
-        return toJS(AllCards)!.map((re) => {
+        return toJS(getBoardCards)!.map((re) => {
           if (re._id === res) {
             return temp.push(re);
           }
@@ -55,7 +55,7 @@ const KanbanList: FC<IKanbanList> = ({ title, cards, id, index }) => {
   };
   useEffect(() => {
     CardList();
-  }, [AllCards]);
+  }, [getBoardCards]);
 
   return (
     <Draggable draggableId={id} index={index}>
@@ -93,7 +93,6 @@ const KanbanList: FC<IKanbanList> = ({ title, cards, id, index }) => {
                                       setListText(e.target.value)
                                     }
                                     onKeyDown={(e) => HandleUpdateListTitle(e)}
-                                    // onBlur={() => setEditList(false)}
                                     className="border-none outline-none resize-none"
                                   />
                                 </div>

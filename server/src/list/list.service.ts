@@ -84,7 +84,7 @@ export class ListService {
     }
   }
 
-  async getAllList(listDto: IGetAllList) {
+  async getBoardLists(listDto: IGetAllList) {
     const { boardId } = listDto;
     try {
       const board = await this.boardModel

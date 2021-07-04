@@ -20,10 +20,10 @@ export default class KanbanStore {
   editCardID: IEditCard | null = null;
   allBoards: IGetAllBoards | null = null;
   currentBoardId: string = "";
-  getAllList: IGetAllListFromBoard | null = null;
+  getBoardLists: IGetAllListFromBoard | null = null;
   listOrder: string[] = [];
   listInCurrentBoard: IList[] | null = null;
-  AllCards: ICard[] | null = null;
+  getBoardCards: ICard[] | null = null;
   LoadingNotes = false;
   CardAdded: ICreateCard = {} as ICreateCard;
 
@@ -31,7 +31,7 @@ export default class KanbanStore {
     makeAutoObservable(this);
   }
   get GetCardText() {
-    let temp = this.AllCards?.find(
+    let temp = this.getBoardCards?.find(
       (res) => res._id === this.editCardID?.cardID
     );
     return temp;
@@ -52,8 +52,8 @@ export default class KanbanStore {
   setListInCurrentBoard = (board: IList[] | null) => {
     this.listInCurrentBoard = board;
   };
-  setAllCards = (card: ICard[]) => {
-    this.AllCards = card;
+  setGetBoardContentCards = (card: ICard[]) => {
+    this.getBoardCards = card;
   };
   setAllBoards = (board: IGetAllBoards | null) => {
     this.allBoards = board;
@@ -64,8 +64,8 @@ export default class KanbanStore {
   setOpenEditTodoModal = (open: boolean) => {
     this.openEditTodoModal = open;
   };
-  setGetAllList = (list: IGetAllListFromBoard) => {
-    this.getAllList = list;
+  setGetBoardContentList = (list: IGetAllListFromBoard) => {
+    this.getBoardLists = list;
   };
 
   setEditCardID = (listID: string, cardID: string) => {
@@ -171,10 +171,10 @@ export default class KanbanStore {
         let temp = {} as ICard;
         temp._id = result.card._id;
         temp.title = result.card.title;
-        if (this.AllCards === null) {
-          this.setAllCards([temp]);
+        if (this.getBoardCards === null) {
+          this.setGetBoardContentCards([temp]);
         } else {
-          this.AllCards?.push(temp);
+          this.getBoardCards?.push(temp);
         }
 
         this.listInCurrentBoard?.forEach((res) => {
@@ -208,12 +208,12 @@ export default class KanbanStore {
       throw error;
     }
   };
-  GetList = async (boardId: string) => {
+  GetBoardContent = async (boardId: string) => {
     try {
       this.setLoadingNotes(true);
       const result = await agent.KanbanService.getAllListFromBoard(boardId);
       runInAction(() => {
-        this.setGetAllList(result);
+        this.setGetBoardContentList(result);
         this.listOrder = result.board.listOrder;
         const order = result.list.sort((a, b) => {
           return (
@@ -223,14 +223,14 @@ export default class KanbanStore {
         });
         this.setListInCurrentBoard(order);
 
-        this.GetAllCard();
+        this.GetBoardCards();
       });
     } catch (error) {
       throw error;
     }
   };
 
-  GetAllCard = async () => {
+  GetBoardCards = async () => {
     try {
       let temp = this.listOrder;
       if (this.listOrder.length === 0) {
@@ -238,7 +238,8 @@ export default class KanbanStore {
       }
       const result = await agent.KanbanService.getAllCardFromList(temp);
       runInAction(() => {
-        if (result.cards.length) this.setAllCards(result.cards.flat());
+        if (result.cards.length)
+          this.setGetBoardContentCards(result.cards.flat());
         this.setLoadingNotes(false);
       });
     } catch (error) {
@@ -300,11 +301,11 @@ export default class KanbanStore {
         cardId
       );
       runInAction(() => {
-        let indexTodo = this.AllCards!.findIndex(
+        let indexTodo = this.getBoardCards!.findIndex(
           (res) => res._id === result.data._id
         );
-        if (this.AllCards !== null) {
-          this.AllCards[indexTodo] = result.data;
+        if (this.getBoardCards !== null) {
+          this.getBoardCards[indexTodo] = result.data;
         }
       });
     } catch (error) {
@@ -315,9 +316,11 @@ export default class KanbanStore {
     try {
       const result = await agent.KanbanService.deleteCard(cardId);
       runInAction(() => {
-        let indexTodo = this.AllCards!.findIndex((res) => res._id === cardId);
-        if (this.AllCards !== null) {
-          this.AllCards!.splice(indexTodo, 1);
+        let indexTodo = this.getBoardCards!.findIndex(
+          (res) => res._id === cardId
+        );
+        if (this.getBoardCards !== null) {
+          this.getBoardCards!.splice(indexTodo, 1);
         }
       });
     } catch (error) {

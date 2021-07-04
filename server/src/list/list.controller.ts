@@ -36,8 +36,8 @@ export class ListController {
   }
 
   @Get('/all/:boardId')
-  getAllList(@Param('boardId') boardId: Types.ObjectId) {
-    return this.listService.getAllList({ boardId });
+  getBoardLists(@Param('boardId') boardId: Types.ObjectId) {
+    return this.listService.getBoardLists({ boardId });
   }
 
   @Delete('/list/:listId')

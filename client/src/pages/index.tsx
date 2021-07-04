@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import LoadingPage from "../app/components/Loading/LoadingPage";
 import Navbar from "../app/components/Navbar/Navbar";
 import KanbanLayout from "../app/PageComponent/Kanban/KanbanLayout";
 import Login from "../app/PageComponent/login/Login";
@@ -16,7 +17,7 @@ const App = () => {
   useEffect(() => {
     userStore.getUser().finally(() => setAppLoaded());
   }, [userStore, setAppLoaded]);
-  if (!appLoaded) return <h1>Loading App</h1>;
+  if (!appLoaded) return <LoadingPage />;
   return (
     <>
       <Route

@@ -13,6 +13,7 @@ import KanbanAddAction from "./KanbanAddAction";
 import KanbanList from "./KanbanList";
 import { Dialog, Transition } from "@headlessui/react";
 import { useParams } from "react-router-dom";
+import LoadingPage from "../../components/Loading/LoadingPage";
 
 const ModalLayout = {
   content: {
@@ -44,13 +45,13 @@ const KanbanLayout = () => {
       sortKanban,
       openEditTodoModal,
       setOpenEditTodoModal,
-      GetList,
+      GetBoardContent,
       currentBoardId,
       allBoards,
       listOrder,
       listInCurrentBoard,
-      getAllList,
-      AllCards,
+      getBoardLists,
+      getBoardCards,
       LoadingNotes,
       setCurrentBoardId,
     },
@@ -78,10 +79,9 @@ const KanbanLayout = () => {
   };
 
   useEffect(() => {
-    console.log("board", id);
-    GetList(id);
+    GetBoardContent(id);
     setCurrentBoardId(id);
-  }, [id, GetList, setCurrentBoardId]);
+  }, [id, GetBoardContent, setCurrentBoardId]);
 
   const HandleClosingModal = () => {
     stopTimer();
@@ -119,26 +119,26 @@ const KanbanLayout = () => {
             </div>
           </Dialog>
         </Transition>
-        {LoadingNotes ? (
-          <h1>Loading...</h1>
-        ) : (
-          <div className="w-full p-3 overflow-hidden">
-            <DragDropContext onDragEnd={HandleOnDragEnd}>
-              <Droppable
-                droppableId="all-lists"
-                direction="horizontal"
-                type="list"
-              >
-                {(provided: DroppableProvided) => (
-                  <Observer>
-                    {() => (
-                      <div
-                        className="grid justify-start w-full h-full grid-flow-col gap-2 p-10 overflow-auto grid-rows-min "
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                      >
-                        {listInCurrentBoard &&
-                          listInCurrentBoard!.map((res, index) => {
+        {!LoadingNotes ? (
+          !listInCurrentBoard ? (
+            <LoadingPage />
+          ) : (
+            <div className="w-full p-3 overflow-hidden">
+              <DragDropContext onDragEnd={HandleOnDragEnd}>
+                <Droppable
+                  droppableId="all-lists"
+                  direction="horizontal"
+                  type="list"
+                >
+                  {(provided: DroppableProvided) => (
+                    <Observer>
+                      {() => (
+                        <div
+                          className="grid justify-start w-full h-full grid-flow-col gap-2 p-10 overflow-auto grid-rows-min "
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                        >
+                          {listInCurrentBoard!.map((res, index) => {
                             return (
                               <KanbanList
                                 key={res._id}
@@ -149,15 +149,18 @@ const KanbanLayout = () => {
                               />
                             );
                           })}
-                        {provided.placeholder}
-                        <KanbanAddAction list={true} />
-                      </div>
-                    )}
-                  </Observer>
-                )}
-              </Droppable>
-            </DragDropContext>
-          </div>
+                          {provided.placeholder}
+                          <KanbanAddAction list={true} />
+                        </div>
+                      )}
+                    </Observer>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            </div>
+          )
+        ) : (
+          <LoadingPage />
         )}
       </div>
     </>
