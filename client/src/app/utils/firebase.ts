@@ -11,6 +11,7 @@ const firebaseConfig = {
 // Initialize Firebase
 if (!firebase.default.apps.length) {
   firebase.default.initializeApp(firebaseConfig);
+  firebase.default.setLogLevel("silent");
 } else {
   firebase.default.app();
 }
