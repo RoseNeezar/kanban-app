@@ -26,7 +26,7 @@ const Register: FC = () => {
     if (email) {
       setIsLoading(true);
       const config: firebase.default.auth.ActionCodeSettings = {
-        url: process.env.NEXT_PUBLIC_SERVER_REGISTER_URL as string,
+        url: process.env.NEXT_PUBLIC_SERVER_REGISTER_URL!,
         handleCodeInApp: true,
       };
       await auth.sendSignInLinkToEmail(email, config);
