@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import Head from "next/head";
 import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 import InputGroup from "../../components/InputGroup";
 import { useStore } from "../../stores/store";
 import { auth, googleAuthProvider } from "../../utils/firebase";
@@ -28,25 +29,37 @@ const Login: FC = () => {
     e.preventDefault();
     if (email && password) {
       try {
-        const result = await auth.signInWithEmailAndPassword(email, password);
-        const idToken = await result.user?.getIdTokenResult();
-        const token = idToken?.token as string;
+        await auth.signInWithEmailAndPassword(email, password).catch((err) => {
+          throw err;
+        });
 
-        login({ email }, history).catch((err) => console.log(err));
-      } catch (error) {}
+        login({ email }, history).catch((err) => {
+          throw err;
+        });
+      } catch (error) {
+        toast.error(error.message);
+      }
+    } else {
+      toast.warn("Please fill up the available fields");
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await auth.signInWithPopup(googleAuthProvider);
-      const idToken = await result.user?.getIdTokenResult();
-      const token = idToken?.token as string;
+      const result = await auth
+        .signInWithPopup(googleAuthProvider)
+        .catch((err) => {
+          throw err;
+        });
 
       loginGoogle({ email: result.user?.email as string }, history).catch(
-        (err) => console.log(err)
+        (err) => {
+          throw err;
+        }
       );
-    } catch (error) {}
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (

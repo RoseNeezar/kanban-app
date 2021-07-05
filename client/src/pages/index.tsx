@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import LoadingPage from "../app/components/Loading/LoadingPage";
 import Navbar from "../app/components/Navbar/Navbar";
 import CompleteRegistration from "../app/PageComponent/confirmUser/CompleteRegistration";
@@ -21,6 +22,7 @@ const App = () => {
   if (!appLoaded) return <LoadingPage />;
   return (
     <>
+      <ToastContainer position="top-right" hideProgressBar />
       <Route
         render={() => (
           <>

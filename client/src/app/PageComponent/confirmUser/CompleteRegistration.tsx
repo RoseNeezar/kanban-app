@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import InputGroup from "../../components/InputGroup";
 import { useStore } from "../../stores/store";
 import { auth } from "../../utils/firebase";
+import { toast } from "react-toastify";
 
 const CompleteRegistration = () => {
   const history = useHistory();
@@ -25,19 +26,29 @@ const CompleteRegistration = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (password) {
-      setIsLoading(true);
+      try {
+        setIsLoading(true);
 
-      const result = await auth.signInWithEmailLink(
-        email,
-        window.location.href
-      );
+        const result = await auth
+          .signInWithEmailLink(email, window.location.href)
+          .catch((err) => {
+            throw err;
+          });
 
-      if (result.user?.emailVerified) {
-        window.localStorage.removeItem("emailRegister");
-        await auth.currentUser?.updatePassword(password);
-        history.push("/login");
+        if (result.user?.emailVerified) {
+          await auth.currentUser?.updatePassword(password).catch((err) => {
+            throw err;
+          });
+          window.localStorage.removeItem("emailRegister");
+          history.push("/login");
+          setIsLoading(false);
+        }
+      } catch (error) {
+        toast.error(error.message);
         setIsLoading(false);
       }
+    } else {
+      toast.warn("Please fill up the available fields");
     }
   };
 

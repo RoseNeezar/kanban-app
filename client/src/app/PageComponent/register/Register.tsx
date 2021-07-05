@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import Head from "next/head";
 import React, { ChangeEvent, FC, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import InputGroup from "../../components/InputGroup";
 import { auth } from "../../utils/firebase";
 
@@ -24,15 +25,24 @@ const Register: FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (email) {
-      setIsLoading(true);
-      const config: firebase.default.auth.ActionCodeSettings = {
-        url: process.env.NEXT_PUBLIC_SERVER_REGISTER_URL!,
-        handleCodeInApp: true,
-      };
-      await auth.sendSignInLinkToEmail(email, config);
-      window.localStorage.setItem("emailRegister", email);
-      setIsLoading(false);
-      setSentEmail(true);
+      try {
+        setIsLoading(true);
+        const config: firebase.default.auth.ActionCodeSettings = {
+          url: process.env.NEXT_PUBLIC_SERVER_REGISTER_URL!,
+          handleCodeInApp: true,
+        };
+        await auth.sendSignInLinkToEmail(email, config).catch((err) => {
+          throw err;
+        });
+        window.localStorage.setItem("emailRegister", email);
+        setIsLoading(false);
+        setSentEmail(true);
+      } catch (error) {
+        setIsLoading(false);
+        toast.error(error.message);
+      }
+    } else {
+      toast.warn("Please fill up the available fields");
     }
   };
 

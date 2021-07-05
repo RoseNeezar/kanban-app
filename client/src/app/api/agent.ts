@@ -110,7 +110,7 @@ const KanbanService = {
   deleteList: (listId: string): Promise<any> =>
     requests.del(`/lists/list/${listId}`),
   deleteBoard: (boardId: string): Promise<any> =>
-    requests.del(`/boards/board/${boardId}`),
+    requests.del(`/boards/${boardId}`),
 };
 
 const agent = {
