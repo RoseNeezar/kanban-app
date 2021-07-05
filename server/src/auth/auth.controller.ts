@@ -23,7 +23,7 @@ export class AuthController {
   login(
     @Res() res: Response,
     @Body(ValidationPipe)
-    authCredentialDto: Pick<AuthCredentialDto, 'token' | 'email' | 'password'>,
+    authCredentialDto: Pick<AuthCredentialDto, 'email'>,
   ): Promise<any> {
     return this.authService.login(authCredentialDto, res);
   }

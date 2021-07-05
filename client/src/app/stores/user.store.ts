@@ -20,7 +20,7 @@ export default class UserStore {
   }
 
   login = async (
-    login: Pick<ILogin, "email" | "token">,
+    login: Pick<ILogin, "email">,
     history: RouteComponentProps["history"]
   ) => {
     try {
@@ -35,7 +35,7 @@ export default class UserStore {
   };
 
   loginGoogle = async (
-    login: Pick<ILogin, "email" | "token">,
+    login: Pick<ILogin, "email">,
     history: RouteComponentProps["history"]
   ) => {
     try {
@@ -66,11 +66,8 @@ export default class UserStore {
 
   getUser = async () => {
     try {
-      const token = (await auth.currentUser?.getIdToken()) as string;
-
-      const result = await agent.AuthService.currentUser({ token });
+      const result = await agent.AuthService.currentUser();
       runInAction(() => {
-        console.log("token", token);
         this.user = result;
       });
     } catch (error) {

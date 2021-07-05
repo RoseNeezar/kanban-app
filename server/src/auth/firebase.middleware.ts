@@ -25,7 +25,7 @@ export class FirebaseMiddleware implements NestMiddleware {
     });
   }
   async use(req: Request, res: Response, next: NextFunction) {
-    const token = req.cookies?.tokenKanban;
+    const token = req.headers.authorization.replace('Bearer ', '');
 
     try {
       const currentUser = await this.defaultApp.auth().verifyIdToken(token);
@@ -35,14 +35,13 @@ export class FirebaseMiddleware implements NestMiddleware {
       //@ts-ignore
       req.user = user;
     } catch (error) {
-      console.log('-----', error);
-      this.accessDenied(req.url, res);
+      this.accessDenied(req.url, res, error.errorInfo.message);
     }
 
     next();
   }
 
-  private accessDenied(url: string, res: Response) {
+  private accessDenied(url: string, res: Response, message: string) {
     res.status(403).json({
       statusCode: 403,
       timeStamp: new Date().toISOString(),

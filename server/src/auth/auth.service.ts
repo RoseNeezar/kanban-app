@@ -15,18 +15,18 @@ export class AuthService {
   ) {}
 
   async login(
-    authCredentialDto: Pick<AuthCredentialDto, 'token' | 'email'>,
+    authCredentialDto: Pick<AuthCredentialDto, 'email'>,
     res: Response,
   ) {
     try {
-      const { email, token } = authCredentialDto;
+      const { email } = authCredentialDto;
 
       const oldUser = await this.userModel.findOne({ email });
 
       if (oldUser) {
-        const cookie = this.getCookieWithJwtToken(token);
+        // const cookie = this.getCookieWithJwtToken(token);
 
-        res.setHeader('Set-Cookie', cookie);
+        // res.setHeader('Set-Cookie', cookie);
         return res.send(oldUser);
       }
 
@@ -37,9 +37,9 @@ export class AuthService {
 
       const newUser = await this.userModel.create(user);
 
-      const cookie = this.getCookieWithJwtToken(token);
+      // const cookie = this.getCookieWithJwtToken(token);
 
-      res.setHeader('Set-Cookie', cookie);
+      // res.setHeader('Set-Cookie', cookie);
 
       return res.send(newUser);
     } catch (error) {

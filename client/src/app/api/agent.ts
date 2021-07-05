@@ -12,6 +12,13 @@ import {
   IUpdateCardSameList,
 } from "../stores/types/kanban.types";
 import { ILogin, IRegister, IUser } from "../stores/types/user.types";
+import { auth } from "../utils/firebase";
+
+axios.interceptors.request.use(async (config) => {
+  const token = (await auth.currentUser?.getIdToken()) as string;
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -25,13 +32,13 @@ const requests = {
 };
 
 const AuthService = {
-  login: (data: Pick<ILogin, "email" | "token">) =>
+  login: (data: Pick<ILogin, "email">) =>
     requests.post<IUser>("auth/login", data),
-  loginGoogle: (data: Pick<ILogin, "email" | "token">) =>
+  loginGoogle: (data: Pick<ILogin, "email">) =>
     requests.post<IUser>("auth/login/google", data),
   register: (data: IRegister) => requests.post<void>("auth/register", data),
   logout: () => requests.post("auth/logout"),
-  currentUser: (data: Pick<ILogin, "token">) => requests.get<IUser>("auth/me"),
+  currentUser: () => requests.get<IUser>("auth/me"),
 };
 
 const KanbanService = {

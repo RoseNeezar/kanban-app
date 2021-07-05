@@ -32,7 +32,7 @@ const Login: FC = () => {
         const idToken = await result.user?.getIdTokenResult();
         const token = idToken?.token as string;
 
-        login({ email, token }, history).catch((err) => console.log(err));
+        login({ email }, history).catch((err) => console.log(err));
       } catch (error) {}
     }
   };
@@ -43,10 +43,9 @@ const Login: FC = () => {
       const idToken = await result.user?.getIdTokenResult();
       const token = idToken?.token as string;
 
-      loginGoogle(
-        { email: result.user?.email as string, token },
-        history
-      ).catch((err) => console.log(err));
+      loginGoogle({ email: result.user?.email as string }, history).catch(
+        (err) => console.log(err)
+      );
     } catch (error) {}
   };
 
