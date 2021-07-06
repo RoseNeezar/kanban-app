@@ -136,6 +136,12 @@ const KanbanModal = () => {
     }
     setEdit(false);
   };
+  const HandleUpdateTitle = () => {
+    if (textInput !== undefined && textInput.length !== 0) {
+      UpdateCard(textInput, descp || "", editCardID!.cardID);
+    }
+    setEdit(false);
+  };
 
   const HandleStartPomodoro = () => {
     setStartTimer(!timerState);
@@ -166,7 +172,7 @@ const KanbanModal = () => {
           {typeof GetCardText?.title === "string" && (
             <Dialog.Title>
               <input
-                onBlur={() => HandleEdit()}
+                onBlur={HandleUpdateTitle}
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
                 className="w-full p-2 overflow-scroll text-2xl font-bold rounded-md focus:outline-none focus:ring focus:border-gray-200 text-dark-txt bg-dark-main"

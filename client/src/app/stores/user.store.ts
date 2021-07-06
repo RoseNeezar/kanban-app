@@ -41,7 +41,6 @@ export default class UserStore {
     try {
       const result = await agent.AuthService.loginGoogle(login);
       runInAction(() => {
-        console.log("login google");
         this.user = result;
         history.push("/");
       });
@@ -81,6 +80,8 @@ export default class UserStore {
 
       runInAction(() => {
         this.user = undefined;
+        window.localStorage.removeItem("token");
+
         return history.push("/login");
       });
     } catch (error) {

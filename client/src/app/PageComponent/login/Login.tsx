@@ -29,10 +29,11 @@ const Login: FC = () => {
     e.preventDefault();
     if (email && password) {
       try {
-        await auth.signInWithEmailAndPassword(email, password).catch((err) => {
-          throw err;
-        });
+        const result = await auth.signInWithEmailAndPassword(email, password);
+        const idToken = await result.user?.getIdTokenResult();
 
+        const token = idToken?.token as string;
+        window.localStorage.setItem("token", token);
         login({ email }, history).catch((err) => {
           throw err;
         });
@@ -51,7 +52,9 @@ const Login: FC = () => {
         .catch((err) => {
           throw err;
         });
-
+      const idToken = await result.user?.getIdTokenResult();
+      const token = idToken?.token as string;
+      window.localStorage.setItem("token", token);
       loginGoogle({ email: result.user?.email as string }, history).catch(
         (err) => {
           throw err;

@@ -15,9 +15,41 @@ import { ILogin, IRegister, IUser } from "../stores/types/user.types";
 import { auth } from "../utils/firebase";
 
 axios.interceptors.request.use(async (config) => {
-  const token = (await auth.currentUser?.getIdToken()) as string;
+  let token = (await auth.currentUser?.getIdToken()) as string;
+  if (token) {
+    window.localStorage.removeItem("token");
+    window.localStorage.setItem("token", token);
+  }
+  token = window.localStorage.getItem("token")!;
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
+});
+
+axios.interceptors.response.use(undefined, (error) => {
+  try {
+    const { status, data } = error.response;
+
+    if (status === 403) {
+      if (
+        data.message.includes("expired") ||
+        data.message.includes("Missing Token")
+      ) {
+        auth.currentUser
+          ?.getIdToken()
+          .then(async (res) => {
+            localStorage.setItem("token", res);
+            error.response.config.headers["Authorization"] = `Bearer ${res}`;
+            return axios(error.response.config);
+          })
+          .catch((err) => {
+            window.location.replace(window.location.href);
+            return Promise.reject(err);
+          });
+      }
+    }
+  } catch (error) {
+    throw error.response;
+  }
 });
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;

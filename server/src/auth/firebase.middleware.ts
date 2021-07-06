@@ -1,4 +1,8 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NestMiddleware,
+} from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import * as admin from 'firebase-admin';
 import { AuthService } from './auth.service';
@@ -25,17 +29,22 @@ export class FirebaseMiddleware implements NestMiddleware {
     });
   }
   async use(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.authorization.replace('Bearer ', '');
+    const token = req.headers.authorization;
 
+    if (!token) {
+      throw new BadRequestException('missing token');
+    }
     try {
-      const currentUser = await this.defaultApp.auth().verifyIdToken(token);
+      const currentUser = await this.defaultApp
+        .auth()
+        .verifyIdToken(token.replace('Bearer ', ''));
 
       const user = await this.authService.getUserByEmail(currentUser.email);
 
       //@ts-ignore
       req.user = user;
     } catch (error) {
-      this.accessDenied(req.url, res, error.errorInfo.message);
+      this.accessDenied(req.url, res, error.errorInfo);
     }
 
     next();
@@ -46,7 +55,7 @@ export class FirebaseMiddleware implements NestMiddleware {
       statusCode: 403,
       timeStamp: new Date().toISOString(),
       path: url,
-      message: 'Access Denied',
+      message: message,
     });
   }
 }
