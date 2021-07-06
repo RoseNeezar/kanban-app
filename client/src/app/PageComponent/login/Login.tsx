@@ -55,6 +55,7 @@ const Login: FC = () => {
       const idToken = await result.user?.getIdTokenResult();
       const token = idToken?.token as string;
       window.localStorage.setItem("token", token);
+
       loginGoogle({ email: result.user?.email as string }, history).catch(
         (err) => {
           throw err;
