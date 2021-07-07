@@ -34,6 +34,7 @@ axios.interceptors.response.use(undefined, (error) => {
         data.message.includes("expired") ||
         data.message.includes("Missing Token")
       ) {
+        console.log("error", data);
         auth.currentUser
           ?.getIdToken()
           .then(async (res) => {

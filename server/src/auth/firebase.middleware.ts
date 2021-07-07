@@ -44,7 +44,7 @@ export class FirebaseMiddleware implements NestMiddleware {
       //@ts-ignore
       req.user = user;
     } catch (error) {
-      this.accessDenied(req.url, res, error.errorInfo);
+      this.accessDenied(req.url, res, error.errorInfo.message);
     }
 
     next();
