@@ -39,7 +39,6 @@ axios.interceptors.response.use(undefined, (error) => {
             user
               .getIdToken()
               .then(async (res) => {
-                console.log("error--", res);
                 window.localStorage.removeItem("token");
                 localStorage.setItem("token", res);
                 error.response.config.headers[
