@@ -34,10 +34,11 @@ axios.interceptors.response.use(undefined, (error) => {
         data.message.includes("expired") ||
         data.message.includes("Missing Token")
       ) {
-        console.log("error", data);
         auth.currentUser
           ?.getIdToken()
           .then(async (res) => {
+            console.log("error--", res);
+            window.localStorage.removeItem("token");
             localStorage.setItem("token", res);
             error.response.config.headers["Authorization"] = `Bearer ${res}`;
             return axios(error.response.config);
