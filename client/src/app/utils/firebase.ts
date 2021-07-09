@@ -1,4 +1,5 @@
-import * as firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAPlCnVtjDUSoA2eYud0GSwHWar1lC7d4k",
@@ -9,15 +10,15 @@ const firebaseConfig = {
   measurementId: "G-N058PJTFG9",
 };
 // Initialize Firebase
-if (!firebase.default.apps.length) {
-  firebase.default.initializeApp(firebaseConfig);
-  firebase.default.setLogLevel("silent");
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+  firebase.setLogLevel("silent");
 } else {
-  firebase.default.app();
+  firebase.app();
 }
 
-export const auth = firebase.default.auth();
+export const auth = firebase.auth();
 export const googleAuthProvider =
-  new firebase.default.auth.GoogleAuthProvider().setCustomParameters({
+  new firebase.auth.GoogleAuthProvider().setCustomParameters({
     prompt: "select_account",
   });

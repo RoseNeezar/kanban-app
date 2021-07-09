@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { createBrowserHistory } from "history";
 import {
   IGetAllBoards,
   ICreateBoard,
@@ -44,9 +45,14 @@ axios.interceptors.response.use(undefined, (error) => {
                 error.response.config.headers[
                   "Authorization"
                 ] = `Bearer ${res}`;
-                return axios(error.response.config);
+
+                axios(error.response.config);
+                createBrowserHistory().push("/");
+                window.location.reload();
+                return;
               })
               .catch((err) => {
+                window.localStorage.removeItem("token");
                 window.location.replace(window.location.href);
                 return Promise.reject(err);
               });
