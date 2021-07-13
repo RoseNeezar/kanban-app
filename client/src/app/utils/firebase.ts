@@ -2,12 +2,12 @@ import firebase from "firebase/app";
 import "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAPlCnVtjDUSoA2eYud0GSwHWar1lC7d4k",
-  authDomain: "kanban-app-4e541.firebaseapp.com",
-  projectId: "kanban-app-4e541",
-  storageBucket: "kanban-app-4e541.appspot.com",
-  appId: "1:663202516955:web:9839b372ee8b7c4f98a1fe",
-  measurementId: "G-N058PJTFG9",
+  apiKey: process.env.NEXT_PUBLIC_CLIENT_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_CLIENT_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_CLIENT_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_CLIENT_STORAGE_BUCKET,
+  appId: process.env.NEXT_PUBLIC_CLIENT_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_CLIENT_MEASUREMENT_ID,
 };
 // Initialize Firebase
 if (!firebase.apps.length) {
