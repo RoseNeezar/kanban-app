@@ -1,6 +1,4 @@
 import React from "react";
-
-import { useHistory } from "react-router";
 import { useStore } from "../../../stores/store";
 import { auth } from "../../../utils/firebase";
 
@@ -8,10 +6,9 @@ const NavActions = () => {
   const {
     userStore: { logout, user },
   } = useStore();
-  const history = useHistory();
   const handleLogout = async () => {
     await auth.signOut();
-    await logout(history);
+    await logout();
   };
   return (
     <>

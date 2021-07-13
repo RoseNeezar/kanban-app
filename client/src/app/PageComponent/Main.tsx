@@ -1,11 +1,10 @@
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { useStore } from "../stores/store";
+import Navigate from "../utils/Navigate";
 
 const MainPage = () => {
-  const history = useHistory();
   const {
     kanbanStore: {
       GetAllBoards,
@@ -22,7 +21,7 @@ const MainPage = () => {
 
   const HandleBoard = (boardId: string) => {
     setListInCurrentBoard(null);
-    history.push(`/board/${boardId}`);
+    Navigate?.push(`/board/${boardId}`);
   };
   const HandleAddBoard = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {

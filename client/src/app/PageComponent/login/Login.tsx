@@ -1,14 +1,13 @@
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
-import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import React, { ChangeEvent, FC, FormEvent, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputGroup from "../../components/InputGroup";
 import { useStore } from "../../stores/store";
 import { auth, googleAuthProvider } from "../../utils/firebase";
 
 const Login: FC = () => {
-  const history = useHistory();
   const {
     userStore: { login, loginGoogle },
   } = useStore();
@@ -34,7 +33,7 @@ const Login: FC = () => {
 
         const token = idToken?.token as string;
         window.localStorage.setItem("token", token);
-        login({ email }, history).catch((err) => {
+        login({ email }).catch((err) => {
           throw err;
         });
       } catch (error) {
@@ -56,11 +55,9 @@ const Login: FC = () => {
       const token = idToken?.token as string;
       window.localStorage.setItem("token", token);
 
-      loginGoogle({ email: result.user?.email as string }, history).catch(
-        (err) => {
-          throw err;
-        }
-      );
+      loginGoogle({ email: result.user?.email as string }).catch((err) => {
+        throw err;
+      });
     } catch (error) {
       toast.error(error.message);
     }

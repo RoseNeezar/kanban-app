@@ -1,17 +1,13 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Head from "next/head";
-import { Link, useHistory } from "react-router-dom";
-import InputGroup from "../../components/InputGroup";
-import { useStore } from "../../stores/store";
-import { auth } from "../../utils/firebase";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import InputGroup from "../../components/InputGroup";
+import { auth } from "../../utils/firebase";
+import Navigate from "../../utils/Navigate";
 
 const CompleteRegistration = () => {
-  const history = useHistory();
-
   const [formState, setFormState] = useState({
     email: "",
-
     password: "",
   });
   const { email, password } = formState;
@@ -40,7 +36,7 @@ const CompleteRegistration = () => {
             throw err;
           });
           window.localStorage.removeItem("emailRegister");
-          history.push("/login");
+          Navigate?.push("/login");
           setIsLoading(false);
         }
       } catch (error) {

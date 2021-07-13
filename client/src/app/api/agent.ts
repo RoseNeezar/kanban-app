@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { createBrowserHistory } from "history";
 import {
   IGetAllBoards,
   ICreateBoard,
@@ -14,6 +13,7 @@ import {
 } from "../stores/types/kanban.types";
 import { ILogin, IRegister, IUser } from "../stores/types/user.types";
 import { auth } from "../utils/firebase";
+import Navigate from "../utils/Navigate";
 
 axios.interceptors.request.use(async (config) => {
   let token = (await auth.currentUser?.getIdToken()) as string;
@@ -47,7 +47,7 @@ axios.interceptors.response.use(undefined, (error) => {
                 ] = `Bearer ${res}`;
 
                 axios(error.response.config);
-                createBrowserHistory().push("/");
+                Navigate?.push("/");
                 window.location.reload();
                 return;
               })

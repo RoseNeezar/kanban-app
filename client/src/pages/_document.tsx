@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Document, {
   Html,
   Head,
@@ -26,7 +27,7 @@ class MyDocument extends Document {
           />
         </Head>
         <body className="bg-dark-main">
-          <Main />
+          <Main suppresHydrationWarning />
           <NextScript />
         </body>
       </Html>
