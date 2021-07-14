@@ -1,166 +1,78 @@
-import React, { Fragment, useEffect } from "react";
-import {
-  DragDropContext,
-  DragUpdate,
-  Droppable,
-  DroppableProvided,
-} from "react-beautiful-dnd";
-import { useStore } from "../../stores/store";
+import { observer } from "mobx-react-lite";
 import Head from "next/head";
-import { observer, Observer } from "mobx-react-lite";
-import KanbanModal from "./KanbanModal";
-import KanbanAddAction from "./KanbanAddAction";
-import KanbanList from "./KanbanList";
-import { Dialog, Transition } from "@headlessui/react";
-import { useParams } from "react-router-dom";
-import LoadingPage from "../../components/Loading/LoadingPage";
-
-const ModalLayout = {
-  content: {
-    top: "35rem",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    transform: "translate(-50%, -30rem)",
-
-    width: "60rem",
-    padding: "0px",
-    backgroundColor: "transparent",
-    border: "none",
-  },
-  overlay: {
-    top: "0%",
-    left: "0%",
-    right: "0",
-    bottom: "0",
-    overflow: "auto",
-    backgroundColor: "rgba(70,69,72,0.4)",
-  },
-};
+import React, { useEffect, useState } from "react";
+import { useStore } from "../../stores/store";
+import Navigate from "../../utils/Navigate";
 
 const KanbanLayout = () => {
-  const { id } = useParams<{ id: string }>();
   const {
     kanbanStore: {
-      sortKanban,
-      openEditTodoModal,
-      setOpenEditTodoModal,
-      GetBoardContent,
-      currentBoardId,
+      GetAllBoards,
       allBoards,
-      listOrder,
-      listInCurrentBoard,
-      getBoardLists,
-      getBoardCards,
-      LoadingNotes,
+      CreateBoard,
+      DeleteBoard,
+      setListInCurrentBoard,
     },
-    pomodoroStore: { stopTimer, resetTimer },
   } = useStore();
-
-  const BoardTitle = () => {
-    return allBoards?.boards.find((res) => res._id === currentBoardId)?.title;
-  };
-
-  const HandleOnDragEnd = (result: DragUpdate) => {
-    const { draggableId, destination, source, type } = result;
-    if (!destination) {
-      return;
-    }
-
-    sortKanban(
-      source.droppableId,
-      destination.droppableId,
-      source.index,
-      destination.index,
-      draggableId,
-      type
-    );
-  };
-
+  const [boardTitle, setBoardTitle] = useState("");
   useEffect(() => {
-    GetBoardContent(id);
-  }, [id, GetBoardContent]);
+    GetAllBoards();
+  }, []);
 
-  const HandleClosingModal = () => {
-    stopTimer();
-    resetTimer();
-    setOpenEditTodoModal(false);
+  const HandleBoard = (boardId: string) => {
+    setListInCurrentBoard(null);
+    Navigate?.push(`/board/${boardId}`);
   };
+  const HandleAddBoard = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === 13) {
+      CreateBoard(boardTitle);
 
+      setBoardTitle("");
+    }
+  };
+  const HandleDeleteBoard = (boardId: string) => {
+    DeleteBoard(boardId);
+  };
   return (
     <>
-      <Head>
-        <title>Kanban App</title>
-      </Head>
-      <div className="flex flex-row justify-center h-screen pt-12 overflow-scroll bg-dark-main ">
-        <Transition appear show={openEditTodoModal} as={Fragment}>
-          <Dialog
-            as="div"
-            className="fixed inset-0 z-50 overflow-y-auto"
-            onClose={() => HandleClosingModal()}
-          >
-            <div className="min-h-screen px-4 text-center">
-              <Dialog.Overlay className="fixed inset-0 bg-gray-600 opacity-25" />
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <div className="inline-block w-full max-w-6xl my-16 overflow-hidden text-left align-middle transition-all transform shadow-xl rounded-2xl">
-                  <KanbanModal />
+      {!allBoards ? (
+        <h1>Loading...</h1>
+      ) : (
+        <div className="flex flex-col items-center justify-center w-full mt-10">
+          <p className="text-lg text-dark-txt">
+            Fill the input with a board name, then press 'Enter'
+          </p>
+          <input
+            className="p-2 mt-8 mb-8 rounded-md w-96"
+            value={boardTitle}
+            onChange={(e) => setBoardTitle(e.target.value)}
+            onKeyDown={(e) => HandleAddBoard(e)}
+          />
+          <div className="grid justify-center w-full grid-flow-row gap-10 auto-rows-min grid-rows-min grid-cols-fit">
+            {allBoards.boards
+              .filter((fil) => fil.title !== "")
+              .map((res) => (
+                <div className="p-2 rounded-md bg-dark-third" key={res._id}>
+                  <div className="flex justify-end ">
+                    <button
+                      className="text-3xl rounded-full text-dark-main hover:text-gray-200"
+                      onClick={() => HandleDeleteBoard(res._id)}
+                    >
+                      <i className=" bx bxs-x-circle"></i>
+                    </button>
+                  </div>
+
+                  <button
+                    className="w-full rounded-md h-60 hover:text-black hover:bg-gray-200 bg-dark-second text-dark-txt"
+                    onClick={() => HandleBoard(res._id)}
+                  >
+                    {res.title}
+                  </button>
                 </div>
-              </Transition.Child>
-            </div>
-          </Dialog>
-        </Transition>
-        {!LoadingNotes ? (
-          !listInCurrentBoard ? (
-            <LoadingPage />
-          ) : (
-            <div className="w-full p-3 overflow-hidden">
-              <DragDropContext onDragEnd={HandleOnDragEnd}>
-                <Droppable
-                  droppableId="all-lists"
-                  direction="horizontal"
-                  type="list"
-                >
-                  {(provided: DroppableProvided) => (
-                    <Observer>
-                      {() => (
-                        <div
-                          className="grid justify-start w-full h-full grid-flow-col gap-2 p-10 overflow-auto grid-rows-min "
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                        >
-                          {listInCurrentBoard!.map((res, index) => {
-                            return (
-                              <KanbanList
-                                key={res._id}
-                                title={res.title}
-                                cards={res.cardIds}
-                                id={res._id}
-                                index={index}
-                              />
-                            );
-                          })}
-                          {provided.placeholder}
-                          <KanbanAddAction list={true} />
-                        </div>
-                      )}
-                    </Observer>
-                  )}
-                </Droppable>
-              </DragDropContext>
-            </div>
-          )
-        ) : (
-          <LoadingPage />
-        )}
-      </div>
+              ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };
