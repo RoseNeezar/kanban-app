@@ -6,7 +6,7 @@ import NotFound from "../pages/404";
 import LoadingPage from "./components/Loading/LoadingPage";
 import Navbar from "./components/Navbar/Navbar";
 import CompleteRegistration from "./PageComponent/confirmUser/CompleteRegistration";
-import KanbanLayout from "./PageComponent/Kanban/KanbanLayout";
+import KanbanLayout from "./PageComponent/Kanban/KanbanListLayout";
 import Login from "./PageComponent/login/Login";
 import Register from "./PageComponent/register/Register";
 import { store, StoreContext, useStore } from "./stores/store";
