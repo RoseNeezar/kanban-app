@@ -1,16 +1,26 @@
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
-import React, { ChangeEvent, FC, FormEvent, useState } from "react";
+import React, {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  useCallback,
+  useState,
+} from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputGroup from "../../components/InputGroup";
 import { useStore } from "../../stores/store";
+import { useUserStore } from "../../stores/useUserStore";
 import { auth, googleAuthProvider } from "../../utils/firebase";
 
 const Login: FC = () => {
-  const {
-    userStore: { login, loginGoogle },
-  } = useStore();
+  const { login, loginGoogle } = useUserStore(
+    useCallback(
+      (state) => ({ login: state.login, loginGoogle: state.loginGoogle }),
+      []
+    )
+  );
 
   const [formState, setFormState] = useState({
     email: "",

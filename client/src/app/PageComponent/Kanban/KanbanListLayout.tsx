@@ -15,29 +15,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useParams } from "react-router-dom";
 import LoadingPage from "../../components/Loading/LoadingPage";
 
-const ModalLayout = {
-  content: {
-    top: "35rem",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    transform: "translate(-50%, -30rem)",
-
-    width: "60rem",
-    padding: "0px",
-    backgroundColor: "transparent",
-    border: "none",
-  },
-  overlay: {
-    top: "0%",
-    left: "0%",
-    right: "0",
-    bottom: "0",
-    overflow: "auto",
-    backgroundColor: "rgba(70,69,72,0.4)",
-  },
-};
-
 const KanbanLayout = () => {
   const { id } = useParams<{ id: string }>();
   const {

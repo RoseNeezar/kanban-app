@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { FC, useEffect } from "react";
+import React, { FC, useCallback, useEffect } from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import NotFound from "../pages/404";
@@ -13,6 +13,8 @@ import { store, StoreContext, useStore } from "./stores/store";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import MainPage from "./PageComponent/Main";
 import Navigate from "./utils/Navigate";
+import { useUserStore } from "./stores/useUserStore";
+import shallow from "zustand/shallow";
 
 const SafeHydrate: FC = ({ children }) => {
   return (
@@ -23,11 +25,20 @@ const SafeHydrate: FC = ({ children }) => {
 };
 
 const App = () => {
-  const { userStore } = useStore();
-  const { setAppLoaded, appLoaded } = userStore;
+  const { setAppLoaded, appLoaded, getUser } = useUserStore(
+    useCallback(
+      (state) => ({
+        setAppLoaded: state.setAppLoaded,
+        appLoaded: state.appLoaded,
+        getUser: state.getUser,
+      }),
+      []
+    )
+  );
+
   useEffect(() => {
-    userStore.getUser().finally(() => setAppLoaded());
-  }, [userStore, setAppLoaded]);
+    getUser().finally(() => setAppLoaded());
+  }, [setAppLoaded]);
   if (!appLoaded) return <LoadingPage />;
   return (
     <SafeHydrate>
