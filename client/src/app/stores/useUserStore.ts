@@ -18,8 +18,8 @@ export const useUserStore = create(
           const result = await agent.AuthService.login(login);
           set((s) => {
             s.user = result;
-            Navigate?.push("/");
           });
+          Navigate?.push("/");
         } catch (error) {}
       },
       loginGoogle: async (login: Pick<ILogin, "email">) => {
@@ -27,8 +27,8 @@ export const useUserStore = create(
           const result = await agent.AuthService.loginGoogle(login);
           set((s) => {
             s.user = result;
-            Navigate?.push("/");
           });
+          Navigate?.push("/");
         } catch (error) {}
       },
       register: async (register: IRegister) => {
@@ -41,25 +41,29 @@ export const useUserStore = create(
         }
       },
       getUser: async () => {
-        set(async (s) => {
-          try {
-            s.isLoading = true;
-            const result = await agent.AuthService.currentUser();
+        set((s) => {
+          s.isLoading = true;
+        });
+        try {
+          const result = await agent.AuthService.currentUser();
+          set((s) => {
             s.user = result;
             s.isLoading = false;
-          } catch (error) {
+          });
+        } catch (error) {
+          set((s) => {
             s.isLoading = false;
-          }
-        });
+          });
+        }
       },
       logout: async () => {
         try {
           await agent.AuthService.logout();
           set((s) => {
             s.user = undefined;
-            window.localStorage.removeItem("token");
-            Navigate?.push("/login");
           });
+          window.localStorage.removeItem("token");
+          Navigate?.push("/login");
         } catch (error) {}
       },
       setAppLoaded: () => {
