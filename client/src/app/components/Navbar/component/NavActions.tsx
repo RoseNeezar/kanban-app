@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useStore } from "../../../stores/store";
+import { useUserStore } from "../../../stores/useUserStore";
 import { auth } from "../../../utils/firebase";
 
 const NavActions = () => {
-  const {
-    userStore: { logout, user },
-  } = useStore();
+  const { logout, user } = useUserStore(
+    useCallback(
+      (state) => ({
+        logout: state.logout,
+        user: state.user,
+      }),
+      []
+    )
+  );
   const handleLogout = async () => {
     await auth.signOut();
     await logout();
