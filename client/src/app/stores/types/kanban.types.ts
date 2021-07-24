@@ -19,7 +19,7 @@ export interface IGetAllBoards {
 }
 
 export interface IBoard {
-  listOrder: [];
+  kanbanListOrder: [];
   _id: string;
   title: string;
   user?: string;
@@ -48,7 +48,7 @@ export interface IGetAllListFromBoard {
   message: string;
   list: IList[];
   board: {
-    listOrder: [];
+    kanbanListOrder: [];
     _id: string;
     title: string;
   };
@@ -95,7 +95,7 @@ export interface IUpdateList {
 
 export interface IListInBoard {
   details: {
-    listOrder: [];
+    kanbanListOrder: [];
     _id: string;
     user: string;
     title: string;
@@ -116,7 +116,7 @@ export interface IUpdateCardSameList {
 export interface IFirstBoard {
   message: string;
   firstBoard: {
-    listOrder: [];
+    kanbanListOrder: [];
     _id: string;
     user: string;
     title: string;

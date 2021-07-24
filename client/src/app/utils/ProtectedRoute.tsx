@@ -1,8 +1,6 @@
-import { observer } from "mobx-react-lite";
 import React, { FC, useCallback } from "react";
 import { Redirect, Route, RouteProps } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
-import { useStore } from "../stores/store";
 import { useUserStore } from "../stores/useUserStore";
 
 interface Props extends RouteProps {
@@ -40,4 +38,4 @@ const ProtectedRoute: FC<Props> = ({
   );
 };
 
-export default observer(ProtectedRoute);
+export default ProtectedRoute;

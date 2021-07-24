@@ -31,12 +31,12 @@ export class BoardService {
     try {
       const boards = await this.boardModel
         .find({ user: userId })
-        .select('listOrder title _id');
+        .select('kanbanListOrder title _id');
       if (boards.length === 0) {
         const emptyBoard: Board = {
           user: userId,
           title: '',
-          listOrder: [],
+          kanbanListOrder: [],
         };
         return { boards: [emptyBoard] };
       }
@@ -51,7 +51,7 @@ export class BoardService {
       const result = await this.boardModel.create({
         user: userId,
         title,
-        listOrder: [],
+        kanbanListOrder: [],
       });
       return { result };
     } catch (error) {
@@ -64,11 +64,11 @@ export class BoardService {
       if (boardId && newListOrder) {
         const result = await this.boardModel.findByIdAndUpdate(
           boardId,
-          { listOrder: newListOrder },
+          { kanbanListOrder: newListOrder },
           { new: true },
         );
 
-        return { updatedListOrder: result.listOrder };
+        return { updatedListOrder: result.kanbanListOrder };
       }
     } catch (error) {
       throw new BadRequestException(ErrorSanitizer(error));

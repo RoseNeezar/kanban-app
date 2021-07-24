@@ -1,6 +1,5 @@
-import { observer } from "mobx-react-lite";
 import React, { FC, KeyboardEvent, useState } from "react";
-import { useStore } from "../../stores/store";
+import { useKanbanStore } from "../../stores/useKanbanStore";
 
 interface IKanbanAddAction {
   list: boolean | number;
@@ -8,15 +7,13 @@ interface IKanbanAddAction {
 }
 
 const KanbanAddAction: FC<IKanbanAddAction> = ({ list, id }) => {
-  const {
-    kanbanStore: { currentBoardId, CreateList, CreateCard },
-  } = useStore();
+  const { currentKanbanBoardId, CreateList, CreateCard } = useKanbanStore();
   const [openForm, setOpenForm] = useState(false);
   const [textInput, setTextInput] = useState("");
 
   const HandleAdd = () => {
     if (list && textInput.length !== 0) {
-      CreateList(textInput, currentBoardId);
+      CreateList(textInput, currentKanbanBoardId);
       setTextInput("");
       setOpenForm(false);
     }
@@ -74,4 +71,4 @@ const KanbanAddAction: FC<IKanbanAddAction> = ({ list, id }) => {
   );
 };
 
-export default observer(KanbanAddAction);
+export default KanbanAddAction;

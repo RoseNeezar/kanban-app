@@ -1,3 +1,5 @@
+import { Dialog, Transition } from "@headlessui/react";
+import Head from "next/head";
 import React, { Fragment, useEffect } from "react";
 import {
   DragDropContext,
@@ -5,38 +7,27 @@ import {
   Droppable,
   DroppableProvided,
 } from "react-beautiful-dnd";
-import { useStore } from "../../stores/store";
-import Head from "next/head";
-import { observer, Observer } from "mobx-react-lite";
-import KanbanModal from "./KanbanModal";
-import KanbanAddAction from "./KanbanAddAction";
-import KanbanList from "./KanbanList";
-import { Dialog, Transition } from "@headlessui/react";
 import { useParams } from "react-router-dom";
 import LoadingPage from "../../components/Loading/LoadingPage";
+import { useKanbanStore } from "../../stores/useKanbanStore";
+import { usePomodoroStore } from "../../stores/usePomodoroStore";
+import KanbanAddAction from "./KanbanAddAction";
+import KanbanList from "./KanbanList";
+import KanbanModal from "./KanbanModal";
 
 const KanbanLayout = () => {
   const { id } = useParams<{ id: string }>();
-  const {
-    kanbanStore: {
-      sortKanban,
-      openEditTodoModal,
-      setOpenEditTodoModal,
-      GetBoardContent,
-      currentBoardId,
-      allBoards,
-      listOrder,
-      listInCurrentBoard,
-      getBoardLists,
-      getBoardCards,
-      LoadingNotes,
-    },
-    pomodoroStore: { stopTimer, resetTimer },
-  } = useStore();
 
-  const BoardTitle = () => {
-    return allBoards?.boards.find((res) => res._id === currentBoardId)?.title;
-  };
+  const {
+    sortKanban,
+    openEditKanbanCardModal,
+    setOpenEditTodoModal,
+    GetBoardContent,
+    kanbanListInCurrentBoard,
+    LoadingLists,
+  } = useKanbanStore();
+
+  const { stopTimer, resetTimer } = usePomodoroStore();
 
   const HandleOnDragEnd = (result: DragUpdate) => {
     const { draggableId, destination, source, type } = result;
@@ -70,7 +61,7 @@ const KanbanLayout = () => {
         <title>Kanban App</title>
       </Head>
       <div className="flex flex-row justify-center h-screen pt-12 overflow-scroll bg-dark-main ">
-        <Transition appear show={openEditTodoModal} as={Fragment}>
+        <Transition appear show={openEditKanbanCardModal} as={Fragment}>
           <Dialog
             as="div"
             className="fixed inset-0 z-50 overflow-y-auto"
@@ -94,8 +85,8 @@ const KanbanLayout = () => {
             </div>
           </Dialog>
         </Transition>
-        {!LoadingNotes ? (
-          !listInCurrentBoard ? (
+        {!LoadingLists ? (
+          !kanbanListInCurrentBoard ? (
             <LoadingPage />
           ) : (
             <div className="w-full p-3 overflow-hidden">
@@ -106,29 +97,25 @@ const KanbanLayout = () => {
                   type="list"
                 >
                   {(provided: DroppableProvided) => (
-                    <Observer>
-                      {() => (
-                        <div
-                          className="grid justify-start w-full h-full grid-flow-col gap-2 p-10 overflow-auto grid-rows-min "
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                        >
-                          {listInCurrentBoard!.map((res, index) => {
-                            return (
-                              <KanbanList
-                                key={res._id}
-                                title={res.title}
-                                cards={res.cardIds}
-                                id={res._id}
-                                index={index}
-                              />
-                            );
-                          })}
-                          {provided.placeholder}
-                          <KanbanAddAction list={true} />
-                        </div>
-                      )}
-                    </Observer>
+                    <div
+                      className="grid justify-start w-full h-full grid-flow-col gap-2 p-10 overflow-auto grid-rows-min "
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                    >
+                      {kanbanListInCurrentBoard!.map((res, index) => {
+                        return (
+                          <KanbanList
+                            key={res._id}
+                            title={res.title}
+                            cards={res.cardIds}
+                            id={res._id}
+                            index={index}
+                          />
+                        );
+                      })}
+                      {provided.placeholder}
+                      <KanbanAddAction list={true} />
+                    </div>
                   )}
                 </Droppable>
               </DragDropContext>
@@ -142,4 +129,4 @@ const KanbanLayout = () => {
   );
 };
 
-export default observer(KanbanLayout);
+export default KanbanLayout;
