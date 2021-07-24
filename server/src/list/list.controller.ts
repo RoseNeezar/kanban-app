@@ -35,8 +35,8 @@ export class ListController {
   }
 
   @Get('/all/:boardId')
-  getBoardLists(@Param('boardId') boardId: Types.ObjectId) {
-    return this.listService.getBoardLists({ boardId });
+  getKanbanBoardLists(@Param('boardId') boardId: Types.ObjectId) {
+    return this.listService.getKanbanBoardLists({ boardId });
   }
 
   @Delete('/list/:listId')

@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite";
 import Head from "next/head";
 import React from "react";
 import KanbanLayout from "./Kanban/KanbanLayout";
@@ -16,4 +15,4 @@ const MainPage = () => {
   );
 };
 
-export default observer(MainPage);
+export default MainPage;

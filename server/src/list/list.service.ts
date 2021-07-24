@@ -50,9 +50,9 @@ export class ListService {
         throw new BadRequestException(ErrorSanitizer(error));
       }
 
-      const newListOrder = Array.from(board.listOrder);
+      const newListOrder = Array.from(board.kanbanListOrder);
       newListOrder.push(newList._id);
-      await board.set({ listOrder: newListOrder }).save();
+      await board.set({ kanbanListOrder: newListOrder }).save();
       return { list: newList };
     } catch (error) {
       throw new BadRequestException(ErrorSanitizer(error));
@@ -84,12 +84,12 @@ export class ListService {
     }
   }
 
-  async getBoardLists(listDto: IGetAllList) {
+  async getKanbanBoardLists(listDto: IGetAllList) {
     const { boardId } = listDto;
     try {
       const board = await this.boardModel
         .findOne({ _id: boardId })
-        .select('title listOrder');
+        .select('title kanbanListOrder');
       const list = await this.listModel
         .find({ board: boardId })
         .select('cardIds title _id');
@@ -112,8 +112,8 @@ export class ListService {
       }
 
       const cb = await this.boardModel.findOneAndUpdate(
-        { listOrder: Types.ObjectId(listId) },
-        { $pull: { listOrder: Types.ObjectId(listId) } },
+        { kanbanListOrder: Types.ObjectId(listId) },
+        { $pull: { kanbanListOrder: Types.ObjectId(listId) } },
       );
 
       return { data: null };

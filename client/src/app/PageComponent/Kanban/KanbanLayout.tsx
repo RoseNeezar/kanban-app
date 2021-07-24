@@ -1,19 +1,16 @@
-import { observer } from "mobx-react-lite";
-import Head from "next/head";
 import React, { useEffect, useState } from "react";
-import { useStore } from "../../stores/store";
+import { useKanbanStore } from "../../stores/useKanbanStore";
 import Navigate from "../../utils/Navigate";
 
 const KanbanLayout = () => {
   const {
-    kanbanStore: {
-      GetAllBoards,
-      allBoards,
-      CreateBoard,
-      DeleteBoard,
-      setListInCurrentBoard,
-    },
-  } = useStore();
+    GetAllBoards,
+    kanbanBoards,
+    CreateBoard,
+    DeleteBoard,
+    setListInCurrentBoard,
+  } = useKanbanStore();
+
   const [boardTitle, setBoardTitle] = useState("");
   useEffect(() => {
     GetAllBoards();
@@ -35,7 +32,7 @@ const KanbanLayout = () => {
   };
   return (
     <>
-      {!allBoards ? (
+      {!kanbanBoards ? (
         <h1>Loading...</h1>
       ) : (
         <div className="flex flex-col items-center justify-center w-full mt-10">
@@ -49,7 +46,7 @@ const KanbanLayout = () => {
             onKeyDown={(e) => HandleAddBoard(e)}
           />
           <div className="grid justify-center w-full grid-flow-row gap-10 auto-rows-min grid-rows-min grid-cols-fit">
-            {allBoards.boards
+            {kanbanBoards.boards
               .filter((fil) => fil.title !== "")
               .map((res) => (
                 <div className="p-2 rounded-md bg-dark-third" key={res._id}>
@@ -77,4 +74,4 @@ const KanbanLayout = () => {
   );
 };
 
-export default observer(KanbanLayout);
+export default KanbanLayout;

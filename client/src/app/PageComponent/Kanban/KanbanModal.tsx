@@ -1,5 +1,4 @@
 import { Dialog } from "@headlessui/react";
-import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Markdown from "react-markdown";
@@ -7,7 +6,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialOceanic } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import TextAreaAuto from "react-textarea-autosize";
 import gfm from "remark-gfm";
-import { useStore } from "../../stores/store";
+import { useKanbanStore } from "../../stores/useKanbanStore";
 import { usePomodoroStore } from "../../stores/usePomodoroStore";
 
 const components = {
@@ -60,14 +59,12 @@ const TimerCount = ({ setTimerEnd, remainingTime }: any) => {
 
 const KanbanModal = () => {
   const {
-    kanbanStore: {
-      GetCardText,
-      editCardID,
-      setOpenEditTodoModal,
-      DeleteCard,
-      UpdateCard,
-    },
-  } = useStore();
+    GetCardText,
+    currentKanbanCard,
+    setOpenEditTodoModal,
+    DeleteCard,
+    UpdateCard,
+  } = useKanbanStore();
 
   const {
     timerEvents,
@@ -81,9 +78,9 @@ const KanbanModal = () => {
     setTimerEnd,
   } = usePomodoroStore();
 
-  const [textInput, setTextInput] = useState(GetCardText?.title);
+  const [textInput, setTextInput] = useState(GetCardText()?.title);
   const [edit, setEdit] = useState(false);
-  const [descp, setDescp] = useState(GetCardText?.descriptions);
+  const [descp, setDescp] = useState(GetCardText()?.descriptions);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [key, setKey] = useState(25);
 
@@ -125,7 +122,7 @@ const KanbanModal = () => {
   };
 
   const HandleDelete = () => {
-    DeleteCard(editCardID!.cardID);
+    DeleteCard(currentKanbanCard!.cardID);
     setOpenEditTodoModal(false);
   };
   const HandleEdit = () => {
@@ -135,13 +132,13 @@ const KanbanModal = () => {
       descp !== undefined &&
       descp.length !== 0
     ) {
-      UpdateCard(textInput, descp, editCardID!.cardID);
+      UpdateCard(textInput, descp, currentKanbanCard!.cardID);
     }
     setEdit(false);
   };
   const HandleUpdateTitle = () => {
     if (textInput !== undefined && textInput.length !== 0) {
-      UpdateCard(textInput, descp || "", editCardID!.cardID);
+      UpdateCard(textInput, descp || "", currentKanbanCard!.cardID);
     }
     setEdit(false);
   };
@@ -172,7 +169,7 @@ const KanbanModal = () => {
       </div>
       <div className="flex flex-row">
         <div className="flex flex-col w-5/6 pr-4 ">
-          {typeof GetCardText?.title === "string" && (
+          {typeof GetCardText()?.title === "string" && (
             <Dialog.Title>
               <input
                 onBlur={HandleUpdateTitle}
@@ -286,4 +283,4 @@ const KanbanModal = () => {
   );
 };
 
-export default observer(KanbanModal);
+export default KanbanModal;

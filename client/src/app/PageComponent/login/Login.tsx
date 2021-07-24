@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite";
 import Head from "next/head";
 import React, {
   ChangeEvent,
@@ -10,7 +9,6 @@ import React, {
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputGroup from "../../components/InputGroup";
-import { useStore } from "../../stores/store";
 import { useUserStore } from "../../stores/useUserStore";
 import { auth, googleAuthProvider } from "../../utils/firebase";
 
@@ -122,4 +120,4 @@ const Login: FC = () => {
   );
 };
 
-export default observer(Login);
+export default Login;

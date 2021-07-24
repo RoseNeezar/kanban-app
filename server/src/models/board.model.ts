@@ -15,7 +15,7 @@ export class Board {
   @prop({
     ref: 'List',
   })
-  listOrder: Ref<List>[];
+  kanbanListOrder: Ref<List>[];
 
   @prop({
     ref: 'User',
