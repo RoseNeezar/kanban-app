@@ -14,6 +14,7 @@ import KanbanList from "./KanbanList";
 import { Dialog, Transition } from "@headlessui/react";
 import { useParams } from "react-router-dom";
 import LoadingPage from "../../components/Loading/LoadingPage";
+import { usePomodoroStore } from "../../stores/usePomodoroStore";
 
 const KanbanLayout = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,12 +32,9 @@ const KanbanLayout = () => {
       getBoardCards,
       LoadingNotes,
     },
-    pomodoroStore: { stopTimer, resetTimer },
   } = useStore();
 
-  const BoardTitle = () => {
-    return allBoards?.boards.find((res) => res._id === currentBoardId)?.title;
-  };
+  const { stopTimer, resetTimer } = usePomodoroStore();
 
   const HandleOnDragEnd = (result: DragUpdate) => {
     const { draggableId, destination, source, type } = result;

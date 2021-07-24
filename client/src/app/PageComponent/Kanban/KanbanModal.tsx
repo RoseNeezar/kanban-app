@@ -8,6 +8,7 @@ import { materialOceanic } from "react-syntax-highlighter/dist/cjs/styles/prism"
 import TextAreaAuto from "react-textarea-autosize";
 import gfm from "remark-gfm";
 import { useStore } from "../../stores/store";
+import { usePomodoroStore } from "../../stores/usePomodoroStore";
 
 const components = {
   code({ node, inline, className, children, ...props }: any) {
@@ -66,18 +67,20 @@ const KanbanModal = () => {
       DeleteCard,
       UpdateCard,
     },
-    pomodoroStore: {
-      timerEvents,
-      timerState,
-      updateTimerEvents,
-      pomodoro,
-      stopTimer,
-      setStartTimer,
-      setCurrentTimer,
-      timerEnd,
-      setTimerEnd,
-    },
   } = useStore();
+
+  const {
+    timerEvents,
+    timerState,
+    updateTimerEvents,
+    pomodoro,
+    stopTimer,
+    setStartTimer,
+    setCurrentTimer,
+    timerEnd,
+    setTimerEnd,
+  } = usePomodoroStore();
+
   const [textInput, setTextInput] = useState(GetCardText?.title);
   const [edit, setEdit] = useState(false);
   const [descp, setDescp] = useState(GetCardText?.descriptions);
