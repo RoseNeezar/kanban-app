@@ -13,18 +13,12 @@ const ProtectedRoute: FC<Props> = ({
   component: Component,
   ...rest
 }: Props) => {
-  const { isLoading, isLoggedIn } = useUserStore(
-    useCallback(
-      (state) => ({ isLoggedIn: state.isLoggedIn, isLoading: state.isLoading }),
-      []
-    )
-  );
+  const { isLoggedIn } = useUserStore();
   return (
     <Route
       {...rest}
-      render={(props) => {
-        if (isLoading) return <h1>Loading...</h1>;
-        return isLoggedIn() ? (
+      render={(props) =>
+        isLoggedIn() ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -32,8 +26,8 @@ const ProtectedRoute: FC<Props> = ({
               pathname: "/login",
             }}
           />
-        );
-      }}
+        )
+      }
     />
   );
 };
