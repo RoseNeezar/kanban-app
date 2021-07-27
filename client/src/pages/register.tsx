@@ -1,9 +1,9 @@
 import Head from "next/head";
 import React, { ChangeEvent, FC, FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { toast } from "react-toastify";
-import InputGroup from "../../components/InputGroup";
-import { auth } from "../../utils/firebase";
+import InputGroup from "../app/components/InputGroup";
+import { auth } from "../app/utils/firebase";
 
 const Register: FC = () => {
   const [formState, setFormState] = useState({
@@ -63,48 +63,6 @@ const Register: FC = () => {
                   setValue={onChangeText}
                   placeholder="Email"
                 />
-                {/* <InputGroup
-                  className="mb-10"
-                  type="username"
-                  value={username}
-                  setValue={onChangeText}
-                  placeholder="Username"
-                />
-                <InputGroup
-                  className="mb-4"
-                  type="password"
-                  value={password}
-                  setValue={onChangeText}
-                  placeholder="Password"
-                /> */}
-                {/* plugin(function({addUtilities}){
-      const loadingUtil= {
-        'loading-spinner': {
-          display: 'inline-block',
-          width: '80px',
-          height: '80px'
-        }
-        ,'loading-spinner:after' :{
-          content: " ",
-          display: 'block',
-          width: '64px',
-          height: '64px',
-          margin: '8px',
-          border-radius: '50%',
-          border: '6px solid #fff',
-          border-color: '#fff transparent #fff transparent,'
-          animation: 'loading-spinner 1.2s linear infinite',
-        }
-        @keyframes loading-spinner {
-          0% {
-            transform: rotate(0deg),
-          }
-          100% {
-            transform: rotate(360deg),
-          }
-        }
-      }
-    }) */}
                 <button className="relative flex flex-row items-center self-center justify-center w-1/2 h-20 mb-4 text-lg font-bold text-white uppercase hover:bg-dark-third rounded-2xl bg-dark-main">
                   {isLoading ? (
                     <div className="absolute text-sm top-3 left-12">
@@ -118,10 +76,12 @@ const Register: FC = () => {
 
               <small className="flex flex-row">
                 <p className="text-gray-400"> Already have an account?</p>
-                <Link to="/login">
-                  <p className="ml-1 text-white uppercase hover:text-gray-400">
-                    Login
-                  </p>
+                <Link href="/login">
+                  <a>
+                    <p className="ml-1 text-white uppercase hover:text-gray-400">
+                      Login
+                    </p>
+                  </a>
                 </Link>
               </small>
             </div>
