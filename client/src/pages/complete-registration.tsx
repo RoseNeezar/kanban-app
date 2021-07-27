@@ -1,11 +1,13 @@
+import { NextPage } from "next";
+import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import InputGroup from "../../components/InputGroup";
-import { auth } from "../../utils/firebase";
-import Navigate from "../../utils/Navigate";
+import InputGroup from "../app/components/InputGroup";
+import { auth } from "../app/utils/firebase";
 
-const CompleteRegistration = () => {
+const CompleteRegistration: NextPage<{ apiKey: string }> = () => {
+  const router = useRouter();
   const [formState, setFormState] = useState({
     email: "",
     password: "",
@@ -36,7 +38,7 @@ const CompleteRegistration = () => {
             throw err;
           });
           window.localStorage.removeItem("emailRegister");
-          Navigate?.push("/login");
+          router.push("/login");
           setIsLoading(false);
         }
       } catch (error) {

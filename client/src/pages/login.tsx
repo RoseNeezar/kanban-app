@@ -1,3 +1,4 @@
+import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, {
   ChangeEvent,
@@ -6,13 +7,15 @@ import React, {
   useCallback,
   useState,
 } from "react";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import InputGroup from "../../components/InputGroup";
-import { useUserStore } from "../../stores/useUserStore";
-import { auth, googleAuthProvider } from "../../utils/firebase";
+import InputGroup from "../app/components/InputGroup";
+import { useUserStore } from "../app/stores/useUserStore";
+import { auth, googleAuthProvider } from "../app/utils/firebase";
+import Link from "next/link";
 
 const Login: FC = () => {
+  const router = useRouter();
+
   const { login, loginGoogle } = useUserStore(
     useCallback(
       (state) => ({ login: state.login, loginGoogle: state.loginGoogle }),
@@ -41,7 +44,7 @@ const Login: FC = () => {
 
         const token = idToken?.token as string;
         window.localStorage.setItem("token", token);
-        login({ email }).catch((err) => {
+        login({ email }, router).catch((err) => {
           throw err;
         });
       } catch (error) {
@@ -63,9 +66,11 @@ const Login: FC = () => {
       const token = idToken?.token as string;
       window.localStorage.setItem("token", token);
 
-      loginGoogle({ email: result.user?.email as string }).catch((err) => {
-        throw err;
-      });
+      loginGoogle({ email: result.user?.email as string }, router).catch(
+        (err) => {
+          throw err;
+        }
+      );
     } catch (error) {
       toast.error(error.message);
     }
@@ -85,7 +90,7 @@ const Login: FC = () => {
               type="email"
               value={email}
               setValue={onChangeText}
-              placeholder="Username"
+              placeholder="Email"
             />
             <InputGroup
               className="mb-4"
@@ -108,10 +113,12 @@ const Login: FC = () => {
           </button>
           <small className="flex flex-row">
             <p className="text-gray-400"> Dont have an account?</p>
-            <Link to="/register">
-              <p className="ml-1 text-white uppercase hover:text-gray-400">
-                Sign Up
-              </p>
+            <Link href="/register">
+              <a>
+                <p className="ml-1 text-white uppercase hover:text-gray-400">
+                  Sign Up
+                </p>
+              </a>
             </Link>
           </small>
         </div>
