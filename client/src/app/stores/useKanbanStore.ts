@@ -45,11 +45,6 @@ export const useKanbanStore = create(
         });
       },
 
-      setCardAdded: (cardIds: ICreateCard) => {
-        set((s) => {
-          s.CardAdded = cardIds;
-        });
-      },
       setListOrder: (order: string[]) => {
         set((s) => {
           s.kanbanListOrder = order;
@@ -189,13 +184,10 @@ export const useKanbanStore = create(
           });
         }
       },
-      CreateBoard: async (title: string) => {
-        try {
-          const result = await agent.KanbanService.createNewBoard(title);
-          set((s) => {
-            s.kanbanBoards?.boards.push(result.result);
-          });
-        } catch (error) {}
+      CreateBoard: (result: ICreateBoard) => {
+        set((s) => {
+          s.kanbanBoards?.boards.push(result.result);
+        });
       },
 
       CreateCard: async (listId: string, title: string) => {
@@ -206,6 +198,13 @@ export const useKanbanStore = create(
           temp.title = result.card.title;
           if (get().getKanbanBoardCards === null) {
             useKanbanStore.getState().setGetBoardContentCards([temp]);
+            set((s) => {
+              s.kanbanListInCurrentBoard?.forEach((res) => {
+                if (res._id === result.card.list) {
+                  res.cardIds.push(result.card._id);
+                }
+              });
+            });
           } else {
             set((s) => {
               s.getKanbanBoardCards?.push(temp),
@@ -216,8 +215,9 @@ export const useKanbanStore = create(
                 });
             });
           }
-
-          useKanbanStore.getState().setCardAdded(result);
+          set((s) => {
+            s.CardAdded = result;
+          });
         } catch (error) {}
       },
 

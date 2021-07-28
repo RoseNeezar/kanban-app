@@ -1,8 +1,11 @@
+import { useRouter } from "next/dist/client/router";
 import React, { useCallback } from "react";
 import { useUserStore } from "../../../stores/useUserStore";
 import { auth } from "../../../utils/firebase";
 
 const NavActions = () => {
+  const router = useRouter();
+
   const { logout, user } = useUserStore(
     useCallback(
       (state) => ({
@@ -14,7 +17,7 @@ const NavActions = () => {
   );
   const handleLogout = async () => {
     await auth.signOut();
-    await logout();
+    await logout(router);
   };
   return (
     <>

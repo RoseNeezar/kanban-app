@@ -5,10 +5,12 @@ const NotFound = () => {
   return (
     <>
       <Head>
-        <title>NOT FOUND</title>
+        <title>???</title>
       </Head>
       <div className="flex items-center justify-center h-screen bg-dark-main">
-        <p className="text-white text-7xl">Page Not Found</p>
+        <p className="text-xl text-dark-txt">
+          Hmm...this page doesn’t exist. Try searching for something else.
+        </p>
       </div>
     </>
   );
