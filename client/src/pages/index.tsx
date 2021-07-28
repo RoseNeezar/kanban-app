@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/dist/client/router";
 import LottieFile from "../app/utils/LottieFile";
+import { useUserStore } from "../app/stores/useUserStore";
 
 const Index = () => {
   const router = useRouter();
+  const { isLoggedIn, getUser } = useUserStore();
+
+  useEffect(() => {
+    getUser();
+  }, []);
   return (
     <>
       <Head>
@@ -18,18 +24,29 @@ const Index = () => {
             </div>
 
             <div className="flex content-center justify-end w-1/2 mt-3">
-              <div
-                className="flex items-center justify-center w-24 h-10 mr-5 font-bold text-center no-underline duration-300 ease-in-out transform cursor-pointer rounded-xl bg-dark-third text-dark-txt hover:bg-dark-second hover:text-underline"
-                onClick={() => router.push("/login")}
-              >
-                Login
-              </div>
-              <div
-                className="flex items-center justify-center w-24 h-10 font-bold text-center no-underline duration-300 ease-in-out transform cursor-pointer rounded-xl bg-dark-third text-dark-txt hover:bg-dark-second hover:text-underline"
-                onClick={() => router.push("/register")}
-              >
-                Sign Up
-              </div>
+              {isLoggedIn() ? (
+                <div
+                  className="flex items-center justify-center w-24 h-10 mr-5 font-bold text-center no-underline duration-300 ease-in-out transform cursor-pointer rounded-xl bg-dark-third text-dark-txt hover:bg-dark-second hover:text-underline"
+                  onClick={() => router.push("/app")}
+                >
+                  Go to App!
+                </div>
+              ) : (
+                <>
+                  <div
+                    className="flex items-center justify-center w-24 h-10 mr-5 font-bold text-center no-underline duration-300 ease-in-out transform cursor-pointer rounded-xl bg-dark-third text-dark-txt hover:bg-dark-second hover:text-underline"
+                    onClick={() => router.push("/login")}
+                  >
+                    Login
+                  </div>
+                  <div
+                    className="flex items-center justify-center w-24 h-10 font-bold text-center no-underline duration-300 ease-in-out transform cursor-pointer rounded-xl bg-dark-third text-dark-txt hover:bg-dark-second hover:text-underline"
+                    onClick={() => router.push("/register")}
+                  >
+                    Sign Up
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
