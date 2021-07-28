@@ -1,3 +1,4 @@
+import { NextRouter } from "next/dist/client/router";
 import create from "zustand";
 import agent from "../api/agent";
 import Navigate from "../utils/Navigate";
@@ -13,57 +14,48 @@ export const useUserStore = create(
     },
     (set, get) => ({
       isLoggedIn: () => !!get().user,
-      login: async (login: Pick<ILogin, "email">) => {
+      login: async (login: Pick<ILogin, "email">, router: NextRouter) => {
         try {
           const result = await agent.AuthService.login(login);
           set((s) => {
             s.user = result;
           });
-          Navigate?.push("/");
+          router.push("/app/kanban");
         } catch (error) {}
       },
-      loginGoogle: async (login: Pick<ILogin, "email">) => {
+      loginGoogle: async (login: Pick<ILogin, "email">, router: NextRouter) => {
         try {
           const result = await agent.AuthService.loginGoogle(login);
           set((s) => {
             s.user = result;
           });
-          Navigate?.push("/");
+          router.push("/app/kanban");
         } catch (error) {}
       },
-      register: async (register: IRegister) => {
+      register: async (register: IRegister, router: NextRouter) => {
         try {
           await agent.AuthService.register(register);
-
-          Navigate?.push("/login");
+          router.push("/login");
         } catch (error) {
           console.log(error);
         }
       },
       getUser: async () => {
-        set((s) => {
-          s.isLoading = true;
-        });
         try {
           const result = await agent.AuthService.currentUser();
           set((s) => {
             s.user = result;
-            s.isLoading = false;
           });
-        } catch (error) {
-          set((s) => {
-            s.isLoading = false;
-          });
-        }
+        } catch (error) {}
       },
-      logout: async () => {
+      logout: async (router: NextRouter) => {
         try {
           await agent.AuthService.logout();
           set((s) => {
             s.user = undefined;
           });
           window.localStorage.removeItem("token");
-          Navigate?.push("/login");
+          router.push("/");
         } catch (error) {}
       },
       setAppLoaded: () => {
