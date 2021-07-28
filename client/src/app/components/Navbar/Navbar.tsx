@@ -25,9 +25,15 @@ const Navbar = () => {
           <span></span>
         )}
         <div className="flex flex-row justify-between w-1/2">
-          <p className="pt-1.5 text-lg text-dark-txt -ml-10">
-            {boardPath ? currentBoardTitle : "Kanban App"}
-          </p>
+          <div className="pt-1.5 text-lg text-dark-txt -ml-10">
+            {boardPath ? (
+              currentBoardTitle
+            ) : (
+              <div className="cursor-pointer">
+                <i className="text-3xl bx bx-ghost"></i>
+              </div>
+            )}
+          </div>
           {!authChecker ? <NavActions /> : <></>}
         </div>
       </div>
