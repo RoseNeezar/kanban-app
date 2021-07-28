@@ -1,28 +1,17 @@
-import React, { FC, useCallback, useEffect } from "react";
-import { Route, Router, Switch } from "react-router-dom";
+import { useRouter } from "next/dist/client/router";
+import React, { useCallback, useEffect } from "react";
+import { Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import NotFound from "../pages/404";
 import LoadingPage from "./components/Loading/LoadingPage";
 import Navbar from "./components/Navbar/Navbar";
-import CompleteRegistration from "./PageComponent/confirmUser/CompleteRegistration";
-import KanbanLayout from "./PageComponent/Kanban/KanbanListLayout";
-import Login from "./PageComponent/login/Login";
-import MainPage from "./PageComponent/Main";
-import Register from "./PageComponent/register/Register";
-import { store, StoreContext } from "./stores/store";
+import KanbanListLayout from "./PageComponent/Kanban/components/KanbanListLayout";
+
+import MainPage from "./PageComponent/MainPage";
+import NotFound from "./PageComponent/NotFound/NotFound";
 import { useUserStore } from "./stores/useUserStore";
-import Navigate from "./utils/Navigate";
-import ProtectedRoute from "./utils/ProtectedRoute";
+import ScrollToTop from "./utils/ScrollToTop";
 
-const SafeHydrate: FC = ({ children }) => {
-  return (
-    <div suppressHydrationWarning>
-      {typeof document === "undefined" ? null : children}
-    </div>
-  );
-};
-
-const App = () => {
+const MainApp = () => {
   const { setAppLoaded, appLoaded, getUser } = useUserStore(
     useCallback(
       (state) => ({
@@ -39,35 +28,22 @@ const App = () => {
   }, [setAppLoaded]);
   if (!appLoaded) return <LoadingPage />;
   return (
-    <SafeHydrate>
-      <Router history={Navigate!}>
-        <ToastContainer position="top-right" hideProgressBar />
-        <Route
-          render={() => (
-            <>
-              <Navbar />
-              <Switch>
-                <ProtectedRoute exact path="/" component={MainPage} />
-                <ProtectedRoute
-                  exact
-                  path="/board/:id"
-                  component={KanbanLayout}
-                />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/register" component={Register} />
-                <Route
-                  exact
-                  path="/complete-registration"
-                  component={CompleteRegistration}
-                />
-                <Route component={NotFound} />
-              </Switch>
-            </>
-          )}
-        />
-      </Router>
-    </SafeHydrate>
+    <>
+      <ScrollToTop />
+      <ToastContainer position="top-right" hideProgressBar />
+      <Route
+        render={() => (
+          <>
+            <Navbar />
+            <Switch>
+              <Route exact path="/board/:id" component={KanbanListLayout} />
+              <Route path="/" component={MainPage} />
+            </Switch>
+          </>
+        )}
+      />
+    </>
   );
 };
 
-export default App;
+export default MainApp;
