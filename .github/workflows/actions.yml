@@ -57,5 +57,6 @@ jobs:
           docker build -t rneezar2/kanban-app-server ./server 
       - name: docker push
         run: |
+          docker push rneezar2/kanban-app-client
           docker push rneezar2/kanban-app-nginx
           docker push rneezar2/kanban-app-server
