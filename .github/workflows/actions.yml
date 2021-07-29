@@ -45,7 +45,17 @@ jobs:
           NEXT_PUBLIC_CLIENT_APP_ID: ${{ secrets.NEXT_PUBLIC_CLIENT_APP_ID }}
           NEXT_PUBLIC_CLIENT_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_CLIENT_MEASUREMENT_ID }}
         run: |
-          docker build -t rneezar2/kanban-app-client ./client  
+          docker build -t rneezar2/kanban-app-client 
+          --build-arg NEXT_PUBLIC_SERVER_BASE_URL="$NEXT_PUBLIC_SERVER_BASE_URL"
+          --build-arg NEXT_PUBLIC_SERVER_REGISTER_URL="$NEXT_PUBLIC_SERVER_REGISTER_URL"
+          --build-arg NEXT_PUBLIC_CLIENT_BASE_URL="$NEXT_PUBLIC_CLIENT_BASE_URL"
+          --build-arg APP_DOMAIN="$APP_DOMAIN"
+          --build-arg NEXT_PUBLIC_CLIENT_API_KEY="$NEXT_PUBLIC_CLIENT_API_KEY"
+          --build-arg NEXT_PUBLIC_CLIENT_PROJECT_ID="$NEXT_PUBLIC_CLIENT_PROJECT_ID"
+          --build-arg NEXT_PUBLIC_CLIENT_AUTH_DOMAIN="$NEXT_PUBLIC_CLIENT_AUTH_DOMAIN"
+          --build-arg NEXT_PUBLIC_CLIENT_STORAGE_BUCKET="$NEXT_PUBLIC_CLIENT_STORAGE_BUCKET"
+          --build-arg NEXT_PUBLIC_CLIENT_APP_ID="$NEXT_PUBLIC_CLIENT_APP_ID"
+          --build-arg NEXT_PUBLIC_CLIENT_MEASUREMENT_ID="$NEXT_PUBLIC_CLIENT_MEASUREMENT_ID" ./client  
       - name: docker build nginx
         run: |
           docker build -t rneezar2/kanban-app-nginx ./nginx
