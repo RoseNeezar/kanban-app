@@ -39,16 +39,16 @@ jobs:
           tags: rneezar2/kanban-app-client
           file: ./client/Dockerfile
           build-args: |
-            APP_DOMAIN="${{ secrets.APP_DOMAIN }}"
-            NEXT_PUBLIC_SERVER_BASE_URL="${{ secrets.NEXT_PUBLIC_SERVER_BASE_URL }}"
-            NEXT_PUBLIC_CLIENT_BASE_URL="${{ secrets.NEXT_PUBLIC_CLIENT_BASE_URL }}"
-            NEXT_PUBLIC_SERVER_REGISTER_URL="${{ secrets.NEXT_PUBLIC_SERVER_REGISTER_URL }}"
-            NEXT_PUBLIC_CLIENT_API_KEY="${{ secrets.NEXT_PUBLIC_CLIENT_API_KEY }}"
-            NEXT_PUBLIC_CLIENT_PROJECT_ID="${{ secrets.NEXT_PUBLIC_CLIENT_PROJECT_ID }}"
-            NEXT_PUBLIC_CLIENT_AUTH_DOMAIN="${{ secrets.NEXT_PUBLIC_CLIENT_AUTH_DOMAIN }}"
-            NEXT_PUBLIC_CLIENT_STORAGE_BUCKET="${{ secrets.NEXT_PUBLIC_CLIENT_STORAGE_BUCKET }}"
-            NEXT_PUBLIC_CLIENT_APP_ID="${{ secrets.NEXT_PUBLIC_CLIENT_APP_ID }}"
-            NEXT_PUBLIC_CLIENT_MEASUREMENT_ID="${{ secrets.NEXT_PUBLIC_CLIENT_MEASUREMENT_ID }}" 
+            APP_DOMAIN=${{ secrets.APP_DOMAIN }}
+            NEXT_PUBLIC_SERVER_BASE_URL=${{ secrets.NEXT_PUBLIC_SERVER_BASE_URL }}
+            NEXT_PUBLIC_CLIENT_BASE_URL=${{ secrets.NEXT_PUBLIC_CLIENT_BASE_URL }}
+            NEXT_PUBLIC_SERVER_REGISTER_URL=${{ secrets.NEXT_PUBLIC_SERVER_REGISTER_URL }}
+            NEXT_PUBLIC_CLIENT_API_KEY=${{ secrets.NEXT_PUBLIC_CLIENT_API_KEY }}
+            NEXT_PUBLIC_CLIENT_PROJECT_ID=${{ secrets.NEXT_PUBLIC_CLIENT_PROJECT_ID }}
+            NEXT_PUBLIC_CLIENT_AUTH_DOMAIN=${{ secrets.NEXT_PUBLIC_CLIENT_AUTH_DOMAIN }}
+            NEXT_PUBLIC_CLIENT_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_CLIENT_STORAGE_BUCKET }}
+            NEXT_PUBLIC_CLIENT_APP_ID=${{ secrets.NEXT_PUBLIC_CLIENT_APP_ID }}
+            NEXT_PUBLIC_CLIENT_MEASUREMENT_ID=${{ secrets.NEXT_PUBLIC_CLIENT_MEASUREMENT_ID }} 
       - name: docker build nginx
         run: |
           docker build -t rneezar2/kanban-app-nginx ./nginx
