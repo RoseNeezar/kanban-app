@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./client
-          builder: rneezar2/kanban-app-client
+          tags: rneezar2/kanban-app-client
           file: ./client/Dockerfile
           build-args: |
             APP_DOMAIN="${{ secrets.APP_DOMAIN }}"
