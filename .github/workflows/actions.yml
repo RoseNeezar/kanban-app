@@ -55,7 +55,7 @@ jobs:
           --build-arg NEXT_PUBLIC_CLIENT_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_CLIENT_AUTH_DOMAIN }}
           --build-arg NEXT_PUBLIC_CLIENT_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_CLIENT_STORAGE_BUCKET }}
           --build-arg NEXT_PUBLIC_CLIENT_APP_ID: ${{ secrets.NEXT_PUBLIC_CLIENT_APP_ID }}
-          --build-arg NEXT_PUBLIC_CLIENT_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_CLIENT_MEASUREMENT_ID }}  
+          --build-arg NEXT_PUBLIC_CLIENT_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_CLIENT_MEASUREMENT_ID }} ./client  
       - name: docker build nginx
         run: |
           docker build -t rneezar2/kanban-app-nginx ./nginx
