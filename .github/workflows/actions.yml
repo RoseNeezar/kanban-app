@@ -34,6 +34,9 @@ jobs:
           docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
       - name: docker build client
         with:
+          context: ./client
+          builder: rneezar2/kanban-app-client
+          file: ./client/Dockerfile
           build-args: |
             APP_DOMAIN="${{ secrets.APP_DOMAIN }}"
             NEXT_PUBLIC_SERVER_BASE_URL="${{ secrets.NEXT_PUBLIC_SERVER_BASE_URL }}"
@@ -45,8 +48,6 @@ jobs:
             NEXT_PUBLIC_CLIENT_STORAGE_BUCKET="${{ secrets.NEXT_PUBLIC_CLIENT_STORAGE_BUCKET }}"
             NEXT_PUBLIC_CLIENT_APP_ID="${{ secrets.NEXT_PUBLIC_CLIENT_APP_ID }}"
             NEXT_PUBLIC_CLIENT_MEASUREMENT_ID="${{ secrets.NEXT_PUBLIC_CLIENT_MEASUREMENT_ID }}" 
-        run: |
-          docker build -t rneezar2/kanban-app-client  ./client  
       - name: docker build nginx
         run: |
           docker build -t rneezar2/kanban-app-nginx ./nginx
