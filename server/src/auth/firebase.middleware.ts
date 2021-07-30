@@ -38,7 +38,6 @@ export class FirebaseMiddleware implements NestMiddleware {
       const currentUser = await this.defaultApp
         .auth()
         .verifyIdToken(token.replace('Bearer ', ''));
-
       const user = await this.authService.getUserByEmail(currentUser.email);
 
       //@ts-ignore

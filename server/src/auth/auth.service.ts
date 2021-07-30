@@ -24,9 +24,6 @@ export class AuthService {
       const oldUser = await this.userModel.findOne({ email });
 
       if (oldUser) {
-        // const cookie = this.getCookieWithJwtToken(token);
-
-        // res.setHeader('Set-Cookie', cookie);
         return res.send(oldUser);
       }
 
@@ -36,10 +33,6 @@ export class AuthService {
       };
 
       const newUser = await this.userModel.create(user);
-
-      // const cookie = this.getCookieWithJwtToken(token);
-
-      // res.setHeader('Set-Cookie', cookie);
 
       return res.send(newUser);
     } catch (error) {
@@ -88,6 +81,12 @@ export class AuthService {
     if (user) {
       return user;
     }
-    return null;
+
+    const createUser: User = {
+      username: shortId.generate(),
+      email,
+    };
+    const newUser = await this.userModel.create(createUser);
+    return newUser;
   }
 }
