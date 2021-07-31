@@ -22,6 +22,7 @@ module.exports = {
       },
       gridTemplateColumns: {
         fit: "repeat(auto-fit, 18rem)",
+        calendar: "repeat(7, 1fr)",
       },
       gridTemplateRows: {
         min: "min-content",
