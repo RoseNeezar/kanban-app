@@ -47,8 +47,8 @@ axios.interceptors.response.use(undefined, (error) => {
                 ] = `Bearer ${res}`;
 
                 axios(error.response.config);
-                Navigate?.push("/");
-                window.location.reload();
+                // Navigate?.push("/");
+                // window.location.reload();
                 return;
               })
               .catch((err) => {
@@ -113,9 +113,10 @@ const KanbanService = {
   updateCard: (
     title: string,
     descriptions: string,
+    dueDate: Date,
     cardId: string
   ): Promise<IUpdateCard> =>
-    requests.post(`/cards/card/${cardId}`, { title, descriptions }),
+    requests.post(`/cards/card/${cardId}`, { title, descriptions, dueDate }),
 
   updateList: (title: string, listId: string): Promise<IUpdateList> =>
     requests.post(`/lists/${listId}`, { title: title }),

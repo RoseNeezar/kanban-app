@@ -80,7 +80,7 @@ const KanbanModal = () => {
     setTimerEnd,
   } = usePomodoroStore();
 
-  const { setDate } = useDatePickerStore();
+  const { setDate, date, isVisible, userAddDAte } = useDatePickerStore();
 
   const [textInput, setTextInput] = useState(GetCardText()?.title);
   const [edit, setEdit] = useState(false);
@@ -89,6 +89,7 @@ const KanbanModal = () => {
   const [key, setKey] = useState(25);
 
   const isInitialMount = useRef(true);
+  const isInitialMountDate = useRef(true);
   const tabRef = useRef(0);
   const tabs = [
     {
@@ -136,13 +137,13 @@ const KanbanModal = () => {
       descp !== undefined &&
       descp.length !== 0
     ) {
-      UpdateCard(textInput, descp, currentKanbanCard!.cardID);
+      UpdateCard(textInput, descp, date, currentKanbanCard!.cardID);
     }
     setEdit(false);
   };
   const HandleUpdateTitle = () => {
     if (textInput !== undefined && textInput.length !== 0) {
-      UpdateCard(textInput, descp || "", currentKanbanCard!.cardID);
+      UpdateCard(textInput, descp || "", date, currentKanbanCard!.cardID);
     }
     setEdit(false);
   };
@@ -150,10 +151,26 @@ const KanbanModal = () => {
   const HandleStartPomodoro = () => {
     setStartTimer(!timerState);
   };
-
+  useEffect(() => {
+    if (isInitialMountDate.current) {
+      isInitialMountDate.current = false;
+    } else {
+      if (!isVisible && userAddDAte) {
+        UpdateCard(
+          textInput || "",
+          descp || "",
+          date,
+          currentKanbanCard!.cardID
+        );
+      }
+    }
+  }, [isVisible]);
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
+      if (!!GetCardText()?.dueDate) {
+        setDate(new Date(GetCardText()!.dueDate!));
+      }
       setKey((prevKey) => prevKey + 1);
       updateTimerEvents(timerEvents);
     } else {

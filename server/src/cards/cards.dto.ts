@@ -12,11 +12,12 @@ interface ICards {
   addedListCardIds: string[];
   listIds: string[];
   descriptions: string;
+  dueDate: Date;
 }
 
 export type ICreateCard = Pick<ICards, 'listId' | 'title'>;
 export type IGetAllCards = Pick<ICards, 'listIds'>;
-export type IUpdateCard = Pick<ICards, 'title' | 'descriptions'>;
+export type IUpdateCard = Pick<ICards, 'title' | 'descriptions' | 'dueDate'>;
 export type IUpdateCardSameList = Pick<
   ICards,
   'sameListId' | 'sameListCardIds'

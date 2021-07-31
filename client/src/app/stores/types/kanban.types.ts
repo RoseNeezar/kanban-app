@@ -57,6 +57,7 @@ export interface IGetAllListFromBoard {
 export interface ICard {
   _id: string;
   title: string;
+  dueDate?: Date;
   descriptions: string;
   list: string;
 }

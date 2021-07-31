@@ -332,12 +332,14 @@ export const useKanbanStore = create(
       UpdateCard: async (
         title: string,
         descriptions: string,
+        dueDate?: Date,
         cardId: string
       ) => {
         try {
           const result = await agent.KanbanService.updateCard(
             title,
             descriptions,
+            dueDate,
             cardId
           );
           let indexTodo = get().getKanbanBoardCards!.findIndex(
