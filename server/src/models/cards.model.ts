@@ -15,6 +15,9 @@ export class Cards {
   @prop()
   descriptions: string;
 
+  @prop({ required: false })
+  dueDate: Date;
+
   @prop({
     ref: 'List',
     index: true,

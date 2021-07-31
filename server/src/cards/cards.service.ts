@@ -32,6 +32,7 @@ export class CardsService {
         list: listId,
         title,
         descriptions: '',
+        dueDate: null,
       });
 
       const list = await this.listModel.findById(listId);
@@ -53,7 +54,7 @@ export class CardsService {
           async (id) =>
             await this.cardsModel
               .find({ list: id })
-              .select('_id title descriptions list'),
+              .select('_id title descriptions dueDate list'),
         );
         let totalCards = await Promise.all(cardsPromise);
 
@@ -67,11 +68,12 @@ export class CardsService {
   }
 
   async updateCard(cardDto: IUpdateCard, cardId: Types.ObjectId) {
-    const { title, descriptions } = cardDto;
+    const { title, descriptions, dueDate } = cardDto;
+    console.log(cardDto);
     try {
       const card = await this.cardsModel.findByIdAndUpdate(
         cardId,
-        { title, descriptions },
+        { title, descriptions, dueDate },
         { new: true },
       );
       return { data: card };

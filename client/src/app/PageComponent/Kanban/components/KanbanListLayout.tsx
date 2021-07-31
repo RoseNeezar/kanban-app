@@ -9,6 +9,7 @@ import {
 } from "react-beautiful-dnd";
 import { useParams } from "react-router-dom";
 import LoadingPage from "../../../components/Loading/LoadingPage";
+import { useDatePickerStore } from "../../../stores/useDatePicker";
 import { useKanbanStore } from "../../../stores/useKanbanStore";
 import { usePomodoroStore } from "../../../stores/usePomodoroStore";
 import KanbanAddAction from "./KanbanAddAction";
@@ -27,6 +28,8 @@ const KanbanListLayout = () => {
     kanbanListInCurrentBoard,
     LoadingLists,
   } = useKanbanStore();
+
+  const { resetDate } = useDatePickerStore();
 
   const { stopTimer, resetTimer } = usePomodoroStore();
 
@@ -53,6 +56,7 @@ const KanbanListLayout = () => {
   const HandleClosingModal = () => {
     stopTimer();
     resetTimer();
+    resetDate();
     setOpenEditTodoModal(false);
   };
 

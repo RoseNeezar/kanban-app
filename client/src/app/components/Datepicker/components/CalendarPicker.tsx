@@ -20,6 +20,7 @@ const CalendarPicker: FC = () => {
     isVisible,
     showCalendar,
     toggleCalendar,
+    userAddDAte,
     date: newDate,
   } = useDatePickerStore();
 
@@ -50,7 +51,7 @@ const CalendarPicker: FC = () => {
               type="text"
               style={inputStyle}
               onFocus={(e) => showCalendar()}
-              value={formattedDate(newDate)}
+              value={userAddDAte ? formattedDate(newDate) : "Select date"}
               readOnly
             />
             <button
