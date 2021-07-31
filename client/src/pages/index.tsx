@@ -10,7 +10,7 @@ const Index = () => {
 
   useEffect(() => {
     getUser();
-  }, []);
+  }, [getUser]);
   return (
     <>
       <Head>

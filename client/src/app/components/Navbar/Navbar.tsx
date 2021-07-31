@@ -25,7 +25,7 @@ const Navbar = () => {
           <span></span>
         )}
         <div className="flex flex-row justify-between w-1/2">
-          <div className="pt-1.5 text-lg text-dark-txt -ml-10">
+          <div className="pt-1.5 text-lg text-dark-txt ">
             {boardPath ? (
               currentBoardTitle
             ) : (
