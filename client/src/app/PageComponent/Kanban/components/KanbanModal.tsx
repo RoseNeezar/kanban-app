@@ -6,6 +6,8 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialOceanic } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import TextAreaAuto from "react-textarea-autosize";
 import gfm from "remark-gfm";
+import Datepicker from "../../../components/Datepicker/Datepicker";
+import { useDatePickerStore } from "../../../stores/useDatePicker";
 import { useKanbanStore } from "../../../stores/useKanbanStore";
 import { usePomodoroStore } from "../../../stores/usePomodoroStore";
 
@@ -77,6 +79,8 @@ const KanbanModal = () => {
     timerEnd,
     setTimerEnd,
   } = usePomodoroStore();
+
+  const { setDate } = useDatePickerStore();
 
   const [textInput, setTextInput] = useState(GetCardText()?.title);
   const [edit, setEdit] = useState(false);
@@ -236,6 +240,12 @@ const KanbanModal = () => {
               <TimerCount setTimerEnd={setTimerEnd} />
             </CountdownCircleTimer>
           </div>
+          <div className="mb-12 ">
+            <p className="mb-2 text-xl font-bold text-center text-dark-txt ">
+              Due Date
+            </p>
+            <Datepicker />
+          </div>
 
           {!timerEnd ? (
             !timerState ? (
@@ -263,14 +273,14 @@ const KanbanModal = () => {
           )}
           {!confirmDelete ? (
             <button
-              className="p-2 mt-1 text-white bg-red-900 rounded-md w-44 hover:bg-red-800"
+              className="w-40 p-2 mt-1 text-white bg-red-900 rounded-md hover:bg-red-800"
               onClick={() => setConfirmDelete(true)}
             >
               Delete
             </button>
           ) : (
             <button
-              className="p-2 mt-1 text-white bg-red-900 rounded-md w-44 hover:bg-red-800"
+              className="w-40 p-2 mt-1 text-white bg-red-900 rounded-md hover:bg-red-800"
               onClick={() => HandleDelete()}
               onMouseLeave={() => setConfirmDelete(false)}
             >

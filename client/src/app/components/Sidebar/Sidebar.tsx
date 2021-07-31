@@ -15,7 +15,7 @@ const Sidebar: FC<ISidebar> = ({ url }) => {
     <>
       <ul className="flex flex-col items-center justify-evenly h-1/2">
         <li
-          className={`mr-auto ml-5  w-20 xl:w-5/6 rounded-3xl py-2 pl-3 hover:bg-dark-third ${
+          className={`mr-auto ml-5  w-3/4  rounded-3xl py-2 pl-3 hover:bg-dark-third ${
             pathname === kanbanRoute && "bg-dark-third "
           }`}
         >
@@ -29,7 +29,7 @@ const Sidebar: FC<ISidebar> = ({ url }) => {
         </li>
 
         <li
-          className={`mr-auto ml-5  w-20 xl:w-5/6  rounded-3xl py-2 pl-3 hover:bg-dark-third ${
+          className={`mr-auto ml-5  w-3/4  rounded-3xl py-2 pl-3 hover:bg-dark-third ${
             pathname === calendarRoute && "bg-dark-third "
           }`}
         >
