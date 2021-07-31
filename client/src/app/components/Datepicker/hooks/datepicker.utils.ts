@@ -7,7 +7,7 @@ export const buttonClassName =
  * For formatting date
  * @param date
  */
-export const formattedDate = (date: Date): string => {
+export const formattedDate = (date: Date) => {
   return `${date.getDate()} ${
     monthNames[date.getMonth()]
   } ${date.getFullYear()}`;

@@ -16,8 +16,14 @@ export const useDatePickerStore = create(
         year: new Date().getFullYear(),
       } as MonthYear,
       isVisible: false,
+      userAddDAte: false,
     },
     (set, get) => ({
+      resetDate: () => {
+        set((s) => {
+          (s.date = new Date()), (s.userAddDAte = false);
+        });
+      },
       setDate: (d: Date) => {
         set((s) => {
           (s.date = d),
@@ -25,6 +31,7 @@ export const useDatePickerStore = create(
               month: d.getMonth(),
               year: d.getFullYear(),
             });
+          s.userAddDAte = true;
         });
       },
       setMonthYear: (date: MonthYear) => {
