@@ -766,6 +766,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-portal@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@types/react-portal/-/react-portal-4.0.3.tgz#7352007ad515839a46cb08791638d9848370db46"
+  integrity sha512-uioKoL023cFPzMrM0IpIlaxJhtOPF02txaVkUjqjPYFD4T2HeyFxqMWcRPCY/AhagxwQX7luB+ZOoZty+JXYng==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-redux@^7.1.16":
   version "7.1.16"
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.16.tgz#0fbd04c2500c12105494c83d4a3e45c084e3cb21"
