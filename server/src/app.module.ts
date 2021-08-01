@@ -13,6 +13,7 @@ import { FirebaseMiddleware } from './auth/firebase.middleware';
 import { BoardModule } from './board/board.module';
 import { CardsModule } from './cards/cards.module';
 import { ListModule } from './list/list.module';
+import { CalendarModule } from './calendar/calendar.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ListModule } from './list/list.module';
     BoardModule,
     CardsModule,
     ListModule,
+    CalendarModule,
   ],
   controllers: [AppController],
   providers: [AppService],

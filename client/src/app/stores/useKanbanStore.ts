@@ -1,9 +1,9 @@
-// @ts-nocheck
 import create from "zustand";
 import agent from "../api/agent";
 import { combineAndImmer } from "./types/combineAndImmer";
 import {
   ICard,
+  ICreateBoard,
   ICreateCard,
   IEditCard,
   IGetAllBoards,
@@ -12,6 +12,7 @@ import {
   IList,
 } from "./types/kanban.types";
 import { cloneDeep } from "lodash";
+import dayjs from "dayjs";
 
 export const useKanbanStore = create(
   combineAndImmer(
@@ -132,11 +133,16 @@ export const useKanbanStore = create(
         //drag list
         if (type === "list") {
           set((s) => {
-            const list = s.kanbanListInCurrentBoard?.splice(dropIndexStart, 1);
+            const list: IList[] = s.kanbanListInCurrentBoard!.splice(
+              dropIndexStart,
+              1
+            );
             s.kanbanListInCurrentBoard?.splice(dropIndexEnd, 0, ...list);
           });
           let result: string[] = [];
-          get().kanbanListInCurrentBoard.forEach((res) => result.push(res._id));
+          get().kanbanListInCurrentBoard!.forEach((res) =>
+            result.push(res._id)
+          );
           useKanbanStore
             .getState()
             .ListReorder(get().currentKanbanBoardId, result);
@@ -144,7 +150,7 @@ export const useKanbanStore = create(
         //in same list
         if (dropIdStart === dropIdEnd) {
           set((s) => {
-            const list = s.kanbanListInCurrentBoard.find(
+            const list = s.kanbanListInCurrentBoard!.find(
               (res) => dropIdStart === res._id
             );
             const card = list?.cardIds.splice(dropIndexStart, 1);
@@ -332,15 +338,16 @@ export const useKanbanStore = create(
       UpdateCard: async (
         title: string,
         descriptions: string,
-        dueDate?: Date,
-        cardId: string
+        cardId: string,
+        dueDate?: Date
       ) => {
         try {
+          const formatDate = dayjs(dueDate).format("YYYY-MM-DD HH:mm:ss");
           const result = await agent.KanbanService.updateCard(
             title,
             descriptions,
-            dueDate,
-            cardId
+            cardId,
+            formatDate
           );
           let indexTodo = get().getKanbanBoardCards!.findIndex(
             (res) => res._id === result.data._id

@@ -3,7 +3,7 @@ import { useKanbanStore } from "../../stores/useKanbanStore";
 import Navigate from "../../utils/Navigate";
 import { useGetKanban } from "./hooks/useGetKanban";
 
-const KanbanLayout = () => {
+const KanbanPage = () => {
   const { GetAllBoards, kanbanBoards, DeleteBoard, setListInCurrentBoard } =
     useKanbanStore();
 
@@ -89,4 +89,4 @@ const KanbanLayout = () => {
   );
 };
 
-export default KanbanLayout;
+export default KanbanPage;

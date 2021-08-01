@@ -1,4 +1,5 @@
 import { Dialog } from "@headlessui/react";
+import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Markdown from "react-markdown";
@@ -137,13 +138,13 @@ const KanbanModal = () => {
       descp !== undefined &&
       descp.length !== 0
     ) {
-      UpdateCard(textInput, descp, date, currentKanbanCard!.cardID);
+      UpdateCard(textInput, descp, currentKanbanCard!.cardID, date);
     }
     setEdit(false);
   };
   const HandleUpdateTitle = () => {
     if (textInput !== undefined && textInput.length !== 0) {
-      UpdateCard(textInput, descp || "", date, currentKanbanCard!.cardID);
+      UpdateCard(textInput, descp || "", currentKanbanCard!.cardID, date);
     }
     setEdit(false);
   };
@@ -159,8 +160,8 @@ const KanbanModal = () => {
         UpdateCard(
           textInput || "",
           descp || "",
-          date,
-          currentKanbanCard!.cardID
+          currentKanbanCard!.cardID,
+          date
         );
       }
     }
@@ -169,6 +170,7 @@ const KanbanModal = () => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
       if (!!GetCardText()?.dueDate) {
+        console.log(GetCardText()!.dueDate);
         setDate(new Date(GetCardText()!.dueDate!));
       }
       setKey((prevKey) => prevKey + 1);

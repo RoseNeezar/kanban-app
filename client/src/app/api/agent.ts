@@ -10,10 +10,13 @@ import {
   IUpdateList,
   IUpdateListOrder,
   IUpdateCardSameList,
+  ICard,
+  ICalendarCard,
 } from "../stores/types/kanban.types";
 import { ILogin, IRegister, IUser } from "../stores/types/user.types";
 import { auth } from "../utils/firebase";
 import Navigate from "../utils/Navigate";
+import Router from "next/router";
 
 axios.interceptors.request.use(async (config) => {
   let token = (await auth.currentUser?.getIdToken()) as string;
@@ -47,9 +50,15 @@ axios.interceptors.response.use(undefined, (error) => {
                 ] = `Bearer ${res}`;
 
                 axios(error.response.config);
-                // Navigate?.push("/");
-                // window.location.reload();
-                return;
+                const app = "/app";
+                const checkApp = window.location.pathname.includes(app);
+                if (checkApp) {
+                  Navigate?.replace(window.location.pathname);
+                  return;
+                } else {
+                  Router.reload();
+                  return;
+                }
               })
               .catch((err) => {
                 window.localStorage.removeItem("token");
@@ -86,6 +95,11 @@ const AuthService = {
   currentUser: () => requests.get<IUser>("auth/me"),
 };
 
+const CalendarService = {
+  getAllDueDate: (year: string, month: string) =>
+    requests.get<ICalendarCard>(`calendar/due-date/${year}/${month}`),
+};
+
 const KanbanService = {
   getAllBoard: (): Promise<IGetAllBoards> => requests.get("/boards/all"),
 
@@ -113,10 +127,16 @@ const KanbanService = {
   updateCard: (
     title: string,
     descriptions: string,
-    dueDate: Date,
-    cardId: string
-  ): Promise<IUpdateCard> =>
-    requests.post(`/cards/card/${cardId}`, { title, descriptions, dueDate }),
+    cardId: string,
+    dueDate?: string
+  ): Promise<IUpdateCard> => {
+    console.log("api-updateCard", dueDate);
+    return requests.post(`/cards/card/${cardId}`, {
+      title,
+      descriptions,
+      dueDate,
+    });
+  },
 
   updateList: (title: string, listId: string): Promise<IUpdateList> =>
     requests.post(`/lists/${listId}`, { title: title }),
@@ -162,6 +182,7 @@ const KanbanService = {
 const agent = {
   AuthService,
   KanbanService,
+  CalendarService,
 };
 
 export default agent;
