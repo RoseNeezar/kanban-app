@@ -60,7 +60,9 @@ export interface ICard {
   dueDate?: Date;
   descriptions: string;
   list: string;
+  boardId?: string;
 }
+export type ICalendarCard = Record<number, ICard[]>;
 
 export interface IAllCards {
   message: string;
