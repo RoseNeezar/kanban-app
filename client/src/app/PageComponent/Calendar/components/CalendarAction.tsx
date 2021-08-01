@@ -1,14 +1,32 @@
 import React from "react";
+import { useCalendarStore } from "../../../stores/useCalendarStore";
+import Navigate from "../../../utils/Navigate";
 
 const CalendarAction = () => {
+  const { cardDueDateList, setOpenCardModal } = useCalendarStore();
+  const goToBoard = (boardId?: string) => {
+    setOpenCardModal(false);
+    Navigate?.push(`/board/${boardId}`);
+  };
   return (
-    <>
-      <div className="flex items-center justify-between px-4 pt-4">
-        <span className="text-lg font-semibold text-gray-500 dark:text-dark-txt">
-          TBD
-        </span>
+    <div className="flex flex-col items-center justify-between w-full p-2 pt-4 rounded-l-lg mt-9 bg-dark-second">
+      <span className="text-lg font-semibold text-dark-txt dark:text-dark-txt">
+        Task List
+      </span>
+      <div className="flex flex-col items-center w-full ">
+        {cardDueDateList &&
+          Object.entries(cardDueDateList).map((re) =>
+            re[1].map((res) => (
+              <div
+                onClick={() => goToBoard(res.boardId)}
+                className="w-full p-3 my-2 text-center rounded-lg cursor-pointer hover:bg-dark-main text-dark-txt bg-dark-third"
+              >
+                <p>{res.title}</p>
+              </div>
+            ))
+          )}
       </div>
-    </>
+    </div>
   );
 };
 
