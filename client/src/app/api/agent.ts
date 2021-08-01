@@ -53,7 +53,7 @@ axios.interceptors.response.use(undefined, (error) => {
                 const app = "/app";
                 const checkApp = window.location.pathname.includes(app);
                 if (checkApp) {
-                  Navigate?.replace(window.location.pathname);
+                  Navigate?.go(0);
                   return;
                 } else {
                   Router.reload();
