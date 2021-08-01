@@ -69,7 +69,7 @@ export class CardsService {
 
   async updateCard(cardDto: IUpdateCard, cardId: Types.ObjectId) {
     const { title, descriptions, dueDate } = cardDto;
-    console.log(cardDto);
+
     try {
       const card = await this.cardsModel.findByIdAndUpdate(
         cardId,
