@@ -61,13 +61,19 @@ const CalendarPage = () => {
         {/* first day needs a grid column */}
         <DateBox
           date={1}
+          currentMonth={monthYear.month}
           gridColumn={monthYear.firstDOW + 1}
           dueDateItems={CardDueDate[1]}
         />
 
         {[...Array(monthYear.lastDate)].map((_, i) =>
           i > 0 ? (
-            <DateBox key={i} date={i + 1} dueDateItems={CardDueDate[i + 1]} />
+            <DateBox
+              currentMonth={monthYear.month}
+              key={i}
+              date={i + 1}
+              dueDateItems={CardDueDate[i + 1]}
+            />
           ) : null
         )}
       </div>
