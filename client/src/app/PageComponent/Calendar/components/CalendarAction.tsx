@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import React from "react";
 import { useCalendarStore } from "../../../stores/useCalendarStore";
 import Navigate from "../../../utils/Navigate";
@@ -19,8 +20,9 @@ const CalendarAction = () => {
             re[1].map((res) => (
               <div
                 onClick={() => goToBoard(res.boardId)}
-                className="w-full p-3 my-2 text-center rounded-lg cursor-pointer hover:bg-dark-main text-dark-txt bg-dark-third"
+                className="flex flex-row w-full p-3 my-2 text-center truncate rounded-lg cursor-pointer hover:bg-dark-main text-dark-txt bg-dark-third "
               >
+                <p className="mr-4">{dayjs(res.dueDate).format("DD/MM")}</p>
                 <p>{res.title}</p>
               </div>
             ))

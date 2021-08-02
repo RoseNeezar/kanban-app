@@ -1,5 +1,6 @@
 import { Dialog, Popover, Transition } from "@headlessui/react";
-import React, { FC, Fragment } from "react";
+import dayjs from "dayjs";
+import React, { FC, Fragment, useMemo } from "react";
 import { ICard } from "../../../stores/types/kanban.types";
 import { useCalendarStore } from "../../../stores/useCalendarStore";
 import Navigate from "../../../utils/Navigate";
@@ -8,9 +9,24 @@ interface DateBoxProps {
   date: number;
   gridColumn?: number;
   dueDateItems?: ICard[];
+  currentMonth: string;
 }
-const DateBox: FC<DateBoxProps> = ({ date, gridColumn, dueDateItems = [] }) => {
+const DateBox: FC<DateBoxProps> = ({
+  date,
+  gridColumn,
+  currentMonth,
+  dueDateItems = [],
+}) => {
   const { setOpenCardModal } = useCalendarStore();
+
+  const getDate = () => {
+    return {
+      day: dayjs().date(),
+      month: dayjs().month() + 1,
+    };
+  };
+  const today = useMemo(() => getDate(), []);
+
   return (
     <>
       <div
@@ -18,7 +34,15 @@ const DateBox: FC<DateBoxProps> = ({ date, gridColumn, dueDateItems = [] }) => {
         style={gridColumn ? { gridColumnStart: `${gridColumn}` } : {}}
       >
         <div className="flex mt-1 ml-2 ">
-          <p className="mr-2"> {date}</p>
+          <p
+            className={`mr-2 ${
+              today.day === date &&
+              today.month === Number(currentMonth) &&
+              "bg-yellow-400  rounded-full p-3 flex items-center justify-center text-dark-main h-5 w-5"
+            }`}
+          >
+            {date}
+          </p>
           <div className="grid w-full grid-cols-2 ">
             {dueDateItems.length < 7 ? (
               dueDateItems.map((res) => (
