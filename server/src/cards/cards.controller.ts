@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   UseGuards,
@@ -37,6 +38,11 @@ export class CardsController {
     @Body() cardDto: IUpdateCard,
   ) {
     return this.cardService.updateCard(cardDto, cardId);
+  }
+
+  @Get('/card/:cardId')
+  getCard(@Param('cardId') cardId: Types.ObjectId) {
+    return this.cardService.getCard(cardId);
   }
 
   @Post('/reorder/samelist')
