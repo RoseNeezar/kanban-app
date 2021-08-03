@@ -66,6 +66,14 @@ export class CardsService {
       throw new BadRequestException(ErrorSanitizer(error));
     }
   }
+  async getCard(cardId: Types.ObjectId) {
+    try {
+      const card = await this.cardsModel.findById(cardId);
+      return card;
+    } catch (error) {
+      throw new BadRequestException(ErrorSanitizer(error));
+    }
+  }
 
   async updateCard(cardDto: IUpdateCard, cardId: Types.ObjectId) {
     const { title, descriptions, dueDate } = cardDto;
