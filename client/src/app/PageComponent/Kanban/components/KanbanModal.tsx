@@ -91,14 +91,12 @@ const KanbanModal = () => {
     Navigate?.goBack();
   };
   const HandleEdit = () => {
-    console.log("edit-ble");
     if (
       textInput !== undefined &&
       textInput.length !== 0 &&
       descp !== undefined &&
       descp.length !== 0
     ) {
-      console.log(userAddDAte);
       UpdateCard(
         textInput,
         descp,
@@ -110,8 +108,6 @@ const KanbanModal = () => {
   };
   const HandleUpdateTitle = () => {
     if (textInput !== undefined && textInput.length !== 0) {
-      console.log(userAddDAte);
-
       UpdateCard(
         textInput,
         descp || "",
