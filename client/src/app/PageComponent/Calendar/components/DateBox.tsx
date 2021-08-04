@@ -1,10 +1,9 @@
-import { Dialog, Popover, Transition } from "@headlessui/react";
+import { Popover, Transition } from "@headlessui/react";
 import dayjs from "dayjs";
 import React, { FC, Fragment, useMemo } from "react";
 import { ICard } from "../../../stores/types/kanban.types";
 import { useCalendarStore } from "../../../stores/useCalendarStore";
 import Navigate from "../../../utils/Navigate";
-import CardModal from "./CardModal";
 interface DateBoxProps {
   date: number;
   gridColumn?: number;
@@ -18,6 +17,10 @@ const DateBox: FC<DateBoxProps> = ({
   dueDateItems = [],
 }) => {
   const { setOpenCardModal } = useCalendarStore();
+
+  const handleOpenCard = async (boardId?: string, cardId?: string) => {
+    Navigate?.push(`/board/${boardId}/card/${cardId}`);
+  };
 
   const getDate = () => {
     return {
@@ -66,9 +69,7 @@ const DateBox: FC<DateBoxProps> = ({
                         leaveTo="opacity-0 translate-y-1"
                       >
                         <Popover.Panel
-                          onClick={() =>
-                            Navigate?.push(`/board/${res.boardId}`)
-                          }
+                          onClick={() => handleOpenCard(res.boardId, res._id)}
                           className="absolute z-10 w-40 max-w-sm px-4 transform -translate-x-1/2 cursor-pointer left-1/2 sm:px-0 lg:max-w-3xl"
                         >
                           <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">

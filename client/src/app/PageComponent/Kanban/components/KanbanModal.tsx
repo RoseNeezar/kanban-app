@@ -3,14 +3,18 @@ import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Markdown from "react-markdown";
+import { useParams } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialOceanic } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import TextAreaAuto from "react-textarea-autosize";
 import gfm from "remark-gfm";
+import agent from "../../../api/agent";
 import Datepicker from "../../../components/Datepicker/Datepicker";
 import { useDatePickerStore } from "../../../stores/useDatePicker";
 import { useKanbanStore } from "../../../stores/useKanbanStore";
 import { usePomodoroStore } from "../../../stores/usePomodoroStore";
+import Navigate from "../../../utils/Navigate";
+import KanbanTimer, { tabs } from "./KanbanTimer";
 
 const components = {
   code({ node, inline, className, children, ...props }: any) {
@@ -32,42 +36,11 @@ const components = {
   },
 };
 
-const TimerCount = ({ setTimerEnd, remainingTime }: any) => {
-  const minutes = Math.floor(remainingTime / 60);
-  const seconds = remainingTime % 60;
-  const isInitialMount = useRef(true);
-
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else {
-      if (remainingTime === 0) {
-        setTimerEnd(true);
-      }
-    }
-  }, [remainingTime]);
-
-  if (remainingTime === 0) {
-    return <p className="table-caption text-2xl text-dark-txt">Timer Done!</p>;
-  }
-
-  if (seconds === 0) {
-    return <p className="text-4xl text-dark-txt">{`${minutes}:${seconds}0`}</p>;
-  }
-  if (seconds / 10 < 1) {
-    return <p className="text-4xl text-dark-txt">{`${minutes}:0${seconds}`}</p>;
-  }
-  return <p className="text-4xl text-dark-txt">{`${minutes}:${seconds}`}</p>;
-};
-
 const KanbanModal = () => {
-  const {
-    GetCardText,
-    currentKanbanCard,
-    setOpenEditTodoModal,
-    DeleteCard,
-    UpdateCard,
-  } = useKanbanStore();
+  const { cardId } = useParams<{ cardId: string; id: string }>();
+
+  const { setEditCardID, currentKanbanCard, DeleteCard, UpdateCard } =
+    useKanbanStore();
 
   const {
     timerEvents,
@@ -83,29 +56,15 @@ const KanbanModal = () => {
 
   const { setDate, date, isVisible, userAddDAte } = useDatePickerStore();
 
-  const [textInput, setTextInput] = useState(GetCardText()?.title);
+  const [textInput, setTextInput] = useState("");
   const [edit, setEdit] = useState(false);
-  const [descp, setDescp] = useState(GetCardText()?.descriptions);
+  const [descp, setDescp] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [key, setKey] = useState(25);
 
   const isInitialMount = useRef(true);
   const isInitialMountDate = useRef(true);
   const tabRef = useRef(0);
-  const tabs = [
-    {
-      placeholder: "Pomodoro",
-      state: "work",
-    },
-    {
-      placeholder: "Short Break",
-      state: "short",
-    },
-    {
-      placeholder: "Long Break",
-      state: "long",
-    },
-  ];
 
   const handleTimerState = () => {
     setStartTimer(false);
@@ -129,22 +88,36 @@ const KanbanModal = () => {
 
   const HandleDelete = () => {
     DeleteCard(currentKanbanCard!.cardID);
-    setOpenEditTodoModal(false);
+    Navigate?.goBack();
   };
   const HandleEdit = () => {
+    console.log("edit-ble");
     if (
       textInput !== undefined &&
       textInput.length !== 0 &&
       descp !== undefined &&
       descp.length !== 0
     ) {
-      UpdateCard(textInput, descp, currentKanbanCard!.cardID, date);
+      console.log(userAddDAte);
+      UpdateCard(
+        textInput,
+        descp,
+        currentKanbanCard!.cardID,
+        userAddDAte ? date : undefined
+      );
     }
     setEdit(false);
   };
   const HandleUpdateTitle = () => {
     if (textInput !== undefined && textInput.length !== 0) {
-      UpdateCard(textInput, descp || "", currentKanbanCard!.cardID, date);
+      console.log(userAddDAte);
+
+      UpdateCard(
+        textInput,
+        descp || "",
+        currentKanbanCard!.cardID,
+        userAddDAte ? date : undefined
+      );
     }
     setEdit(false);
   };
@@ -152,6 +125,23 @@ const KanbanModal = () => {
   const HandleStartPomodoro = () => {
     setStartTimer(!timerState);
   };
+  const getCard = async (cardId: string) => {
+    try {
+      const result = await agent.KanbanService.getCard(cardId);
+      setEditCardID(result.list, result._id);
+      setTextInput(result.title);
+      setDescp(result.descriptions);
+      if (!!result.dueDate) {
+        setDate(new Date(result.dueDate as Date));
+      }
+    } catch (error) {
+      Navigate?.push("/");
+    }
+  };
+  useEffect(() => {
+    getCard(cardId);
+  }, []);
+
   useEffect(() => {
     if (isInitialMountDate.current) {
       isInitialMountDate.current = false;
@@ -166,13 +156,10 @@ const KanbanModal = () => {
       }
     }
   }, [isVisible]);
+
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
-      if (!!GetCardText()?.dueDate) {
-        console.log(GetCardText()!.dueDate);
-        setDate(new Date(GetCardText()!.dueDate!));
-      }
       setKey((prevKey) => prevKey + 1);
       updateTimerEvents(timerEvents);
     } else {
@@ -182,26 +169,17 @@ const KanbanModal = () => {
 
   return (
     <div className="flex flex-col w-full p-5 pt-3 m-auto rounded-md bg-dark-main">
-      <div className="flex justify-end mr-4 ">
-        <button
-          className="text-4xl -mr-7 text-dark-txt"
-          onClick={() => setOpenEditTodoModal(false)}
-        >
-          <i className=" bx bxs-x-circle"></i>
-        </button>
-      </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row my-8">
         <div className="flex flex-col w-5/6 pr-4 ">
-          {typeof GetCardText()?.title === "string" && (
-            <Dialog.Title>
-              <input
-                onBlur={HandleUpdateTitle}
-                value={textInput}
-                onChange={(e) => setTextInput(e.target.value)}
-                className="w-full p-2 overflow-scroll text-2xl font-bold rounded-md focus:outline-none focus:ring focus:border-gray-200 text-dark-txt bg-dark-main"
-              />
-            </Dialog.Title>
-          )}
+          <Dialog.Title>
+            <input
+              onBlur={HandleUpdateTitle}
+              value={textInput}
+              onChange={(e) => setTextInput(e.target.value)}
+              className="w-full p-2 overflow-scroll text-2xl font-bold rounded-md focus:outline-none focus:ring focus:border-gray-200 text-dark-txt bg-dark-main"
+            />
+          </Dialog.Title>
+
           <div className="mt-2 text-5xl text-dark-txt">
             <i className="bx bxl-markdown"></i>
           </div>
@@ -256,7 +234,7 @@ const KanbanModal = () => {
                 stopTimer();
               }}
             >
-              <TimerCount setTimerEnd={setTimerEnd} />
+              <KanbanTimer setTimerEnd={setTimerEnd} />
             </CountdownCircleTimer>
           </div>
           <div className="mb-12 ">

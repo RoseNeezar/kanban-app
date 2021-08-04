@@ -271,7 +271,7 @@ export const useKanbanStore = create(
             s.currentBoardTitle = result.board.title;
           });
 
-          useKanbanStore.getState().GetBoardCards();
+          await useKanbanStore.getState().GetBoardCards();
         } catch (error) {
           throw error;
         }
@@ -342,7 +342,9 @@ export const useKanbanStore = create(
         dueDate?: Date
       ) => {
         try {
-          const formatDate = dayjs(dueDate).format("YYYY-MM-DD HH:mm:ss");
+          const formatDate = !!dueDate
+            ? dayjs(dueDate).format("YYYY-MM-DD HH:mm:ss")
+            : undefined;
           const result = await agent.KanbanService.updateCard(
             title,
             descriptions,

@@ -7,11 +7,12 @@ import {
   Droppable,
   DroppableProvided,
 } from "react-beautiful-dnd";
-import { useParams } from "react-router-dom";
+import { Route, useParams, useRouteMatch } from "react-router-dom";
 import LoadingPage from "../../../components/Loading/LoadingPage";
 import { useDatePickerStore } from "../../../stores/useDatePicker";
 import { useKanbanStore } from "../../../stores/useKanbanStore";
 import { usePomodoroStore } from "../../../stores/usePomodoroStore";
+import Navigate from "../../../utils/Navigate";
 import KanbanAddAction from "./KanbanAddAction";
 
 import KanbanList from "./KanbanList";
@@ -19,11 +20,10 @@ import KanbanModal from "./KanbanModal";
 
 const KanbanListLayout = () => {
   const { id } = useParams<{ id: string }>();
+  const { url } = useRouteMatch();
 
   const {
     sortKanban,
-    openEditKanbanCardModal,
-    setOpenEditTodoModal,
     GetBoardContent,
     kanbanListInCurrentBoard,
     LoadingLists,
@@ -57,7 +57,7 @@ const KanbanListLayout = () => {
     stopTimer();
     resetTimer();
     resetDate();
-    setOpenEditTodoModal(false);
+    Navigate?.push(`/board/${id}`);
   };
 
   return (
@@ -66,30 +66,6 @@ const KanbanListLayout = () => {
         <title>Kanban App</title>
       </Head>
       <div className="flex flex-row justify-center h-screen pt-12 overflow-scroll bg-dark-main ">
-        <Transition appear show={openEditKanbanCardModal} as={Fragment}>
-          <Dialog
-            as="div"
-            className="fixed inset-0 z-50 overflow-y-auto"
-            onClose={() => HandleClosingModal()}
-          >
-            <div className="min-h-screen px-4 text-center">
-              <Dialog.Overlay className="fixed inset-0 bg-gray-600 opacity-25" />
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <div className="inline-block w-full max-w-6xl my-16 overflow-hidden text-left align-middle transition-all transform shadow-xl rounded-2xl">
-                  <KanbanModal />
-                </div>
-              </Transition.Child>
-            </div>
-          </Dialog>
-        </Transition>
         {!LoadingLists ? (
           !kanbanListInCurrentBoard ? (
             <LoadingPage />
@@ -130,6 +106,37 @@ const KanbanListLayout = () => {
           <LoadingPage />
         )}
       </div>
+      <Route
+        path={`${url}/card/:cardId`}
+        children={({ match }) => {
+          return (
+            <Transition appear show={Boolean(match)} as={Fragment}>
+              <Dialog
+                as="div"
+                className="fixed inset-0 z-50 overflow-y-auto"
+                onClose={() => HandleClosingModal()}
+              >
+                <div className="min-h-screen px-4 text-center">
+                  <Dialog.Overlay className="fixed inset-0 bg-gray-600 opacity-25" />
+                  <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0 scale-95"
+                    enterTo="opacity-100 scale-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100 scale-100"
+                    leaveTo="opacity-0 scale-95"
+                  >
+                    <div className="inline-block w-full max-w-6xl my-16 overflow-hidden text-left align-middle transition-all transform shadow-xl rounded-2xl">
+                      <KanbanModal />
+                    </div>
+                  </Transition.Child>
+                </div>
+              </Dialog>
+            </Transition>
+          );
+        }}
+      />
     </>
   );
 };

@@ -130,12 +130,14 @@ const KanbanService = {
     cardId: string,
     dueDate?: string
   ): Promise<IUpdateCard> => {
-    console.log("api-updateCard", dueDate);
     return requests.post(`/cards/card/${cardId}`, {
       title,
       descriptions,
       dueDate,
     });
+  },
+  getCard: (cardId: string): Promise<ICard> => {
+    return requests.get(`/cards/card/${cardId}`);
   },
 
   updateList: (title: string, listId: string): Promise<IUpdateList> =>

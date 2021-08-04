@@ -33,10 +33,10 @@ const MainPage = () => {
       </Head>
 
       <div className="flex justify-center h-screen">
-        <div className="fixed top-0 left-0 flex-col hidden w-1/5 h-full pt-16 lg:flex">
+        <div className="fixed top-0 left-0 flex-col hidden w-1/6 h-full pt-16 lg:flex">
           <Sidebar url={url} />
         </div>
-        <div className="relative w-full px-2 pt-32 lg:w-3/5 lg:pt-16">
+        <div className="relative w-full px-2 pt-32 lg:w-4/6 lg:pt-16">
           <Switch>
             <Route exact path={`${path}kanban`} component={KanbanPage} />
             <Route exact path={`${path}calendar`} component={CalendarPage} />
@@ -52,7 +52,7 @@ const MainPage = () => {
             </div>
           )}
         </div>
-        <div className="fixed top-0 right-0 hidden w-1/5 h-full pt-16 pl-4 lg:block">
+        <div className="fixed top-0 right-0 hidden w-1/6 h-full pt-16 pl-4 lg:block">
           <Switch>
             <Route exact path={`${path}kanban`} component={KanbanAction} />
             <Route exact path={`${path}calendar`} component={CalendarAction} />
