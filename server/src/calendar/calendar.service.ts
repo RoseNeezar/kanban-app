@@ -26,20 +26,25 @@ export class CalendarService {
         },
       });
 
-      await Promise.all(
-        card.map(async (re) => {
-          const list = await this.listModel.findById(re.list);
-          if (JSON.stringify(re.list) === JSON.stringify(list.id)) {
-            const card: any = {
-              ...re,
-            };
-            boardList.push({
-              ...card._doc,
-              boardId: list.board,
-            });
-          }
-        }),
-      );
+      try {
+        await Promise.all(
+          card.map(async (re) => {
+            const list = await this.listModel.findById(re.list);
+
+            if (!!list && JSON.stringify(re.list) === JSON.stringify(list.id)) {
+              const card: any = {
+                ...re,
+              };
+              boardList.push({
+                ...card._doc,
+                boardId: list.board,
+              });
+            }
+          }),
+        );
+      } catch (error) {
+        throw new BadRequestException(ErrorSanitizer(error));
+      }
 
       const CardDueDateMap: CardDueDateMap = {};
 
