@@ -1,4 +1,4 @@
-import { modelOptions, mongoose, prop, Ref } from '@typegoose/typegoose';
+import { modelOptions, prop, Ref } from '@typegoose/typegoose';
 import { List } from './list.model';
 import { User } from './user.model';
 

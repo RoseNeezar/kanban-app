@@ -104,14 +104,14 @@ export class ListService {
     const { listId } = listDto;
     try {
       const removedList = await this.listModel.findByIdAndDelete(listId);
-      const removeCardFromList = await this.cardsModel.findOneAndDelete({
-        list: listId,
-      });
-      if (!removedList || removeCardFromList) {
-        throw new BadRequestException('No id found');
-      }
 
-      const cb = await this.boardModel.findOneAndUpdate(
+      await this.cardsModel.deleteMany({
+        _id: {
+          $in: removedList.cardIds,
+        },
+      });
+
+      await this.boardModel.findOneAndUpdate(
         { kanbanListOrder: Types.ObjectId(listId) },
         { $pull: { kanbanListOrder: Types.ObjectId(listId) } },
       );
