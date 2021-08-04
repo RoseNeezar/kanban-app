@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { Draggable, DraggableProvided } from "react-beautiful-dnd";
+import { useRouteMatch } from "react-router-dom";
 import { useKanbanStore } from "../../../stores/useKanbanStore";
+import Navigate from "../../../utils/Navigate";
 
 interface IKanbanCard {
   text: string;
@@ -9,10 +11,11 @@ interface IKanbanCard {
   listID: string;
 }
 const KanbanCard: FC<IKanbanCard> = ({ text, id, index, listID }) => {
-  const { setOpenEditTodoModal, setEditCardID } = useKanbanStore();
+  const { setEditCardID } = useKanbanStore();
+  const { url } = useRouteMatch();
   const HandleEditCard = () => {
     setEditCardID(listID, id);
-    setOpenEditTodoModal(true);
+    Navigate?.push(`${url}/card/${id}`);
   };
   return (
     <>

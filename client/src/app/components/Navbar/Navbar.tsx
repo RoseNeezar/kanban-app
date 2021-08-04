@@ -20,7 +20,7 @@ const Navbar = () => {
         {boardPath ? (
           <div
             className="pt-1 ml-4 text-2xl cursor-pointer text-dark-txt"
-            onClick={() => Navigate?.goBack()}
+            onClick={() => Navigate?.push("/")}
           >
             <i className="bx bx-arrow-back"></i>
           </div>

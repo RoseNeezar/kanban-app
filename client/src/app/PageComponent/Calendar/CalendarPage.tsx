@@ -14,10 +14,10 @@ const CalendarPage = () => {
       <Transition appear show={openCardModal} as={Fragment}>
         <Dialog
           as="div"
-          className="fixed inset-0 z-50 overflow-y-auto top-24"
+          className="fixed inset-0 z-50 top-24"
           onClose={() => setOpenCardModal(false)}
         >
-          <div className="min-h-screen px-4 text-center">
+          <div className="min-h-screen px-4 text-center ">
             <Dialog.Overlay className="fixed inset-0 bg-gray-600 opacity-25" />
             <Transition.Child
               as={Fragment}
@@ -28,7 +28,7 @@ const CalendarPage = () => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block my-16 overflow-hidden text-left transition-all transform shadow-xl w-96 rounded-2xl">
+              <div className="inline-block my-16 text-left transition-all transform shadow-xl w-96 rounded-2xl">
                 <div className="flex flex-col w-full p-5 pt-3 m-auto rounded-md bg-dark-main">
                   <CardModal />
                 </div>

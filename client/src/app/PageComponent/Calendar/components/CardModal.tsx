@@ -6,12 +6,14 @@ import Navigate from "../../../utils/Navigate";
 
 const CardModal = () => {
   const { cardDueDateList, setOpenCardModal } = useCalendarStore();
-  const goToBoard = (boardId?: string) => {
+  const goToBoard = (boardId?: string, cardId?: string) => {
     setOpenCardModal(false);
-    Navigate?.push(`/board/${boardId}`);
+    setTimeout(() => {
+      Navigate?.push(`/board/${boardId}/card/${cardId}`);
+    }, 600);
   };
   return (
-    <div className="flex flex-col w-full p-5 pt-3 m-auto rounded-md bg-dark-main">
+    <div className="flex flex-col w-full p-5 pt-3 m-auto overflow-y-scroll rounded-md ">
       <div className="flex justify-end mr-4 ">
         <button
           className="text-4xl -mr-7 text-dark-txt"
@@ -20,7 +22,7 @@ const CardModal = () => {
           <i className=" bx bxs-x-circle"></i>
         </button>
       </div>
-      <div className="flex flex-row justify-center">
+      <div className="flex flex-row justify-center h-96 ">
         <div className="flex flex-col w-5/6 pr-4">
           <Dialog.Title>
             <p className="mb-2 text-3xl font-bold text-center text-dark-txt">
@@ -35,8 +37,9 @@ const CardModal = () => {
             Object.entries(cardDueDateList).map((re) =>
               re[1].map((res) => (
                 <div
-                  onClick={() => goToBoard(res.boardId)}
-                  className="p-3 my-2 text-center rounded-lg cursor-pointer text-dark-txt bg-dark-third"
+                  key={res._id}
+                  onClick={() => goToBoard(res.boardId, res._id)}
+                  className="p-3 my-2 text-center rounded-lg cursor-pointer hover:bg-dark-second text-dark-txt bg-dark-third"
                 >
                   <p>{res.title}</p>
                 </div>

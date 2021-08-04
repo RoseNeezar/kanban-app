@@ -4,10 +4,9 @@ import { useCalendarStore } from "../../../stores/useCalendarStore";
 import Navigate from "../../../utils/Navigate";
 
 const CalendarAction = () => {
-  const { cardDueDateList, setOpenCardModal } = useCalendarStore();
-  const goToBoard = (boardId?: string) => {
-    setOpenCardModal(false);
-    Navigate?.push(`/board/${boardId}`);
+  const { cardDueDateList } = useCalendarStore();
+  const goToBoard = (boardId?: string, cardId?: string) => {
+    Navigate?.push(`/board/${boardId}/card/${cardId}`);
   };
   return (
     <div className="flex flex-col items-center justify-between w-full p-2 pt-4 rounded-l-lg mt-9 bg-dark-second">
@@ -19,7 +18,8 @@ const CalendarAction = () => {
           Object.entries(cardDueDateList).map((re) =>
             re[1].map((res) => (
               <div
-                onClick={() => goToBoard(res.boardId)}
+                key={res._id}
+                onClick={() => goToBoard(res.boardId, res._id)}
                 className="flex flex-row w-full p-3 my-2 text-center truncate rounded-lg cursor-pointer hover:bg-dark-main text-dark-txt bg-dark-third "
               >
                 <p className="mr-4">{dayjs(res.dueDate).format("DD/MM")}</p>
